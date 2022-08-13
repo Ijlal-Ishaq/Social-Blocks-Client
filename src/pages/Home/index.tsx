@@ -6,6 +6,9 @@ import Post, { SinglePost } from "../../components/Post/index";
 import Header from "../../components/Header/index";
 import FloatingActionButton from "../../components/FloatingActionButton";
 import SearchButton from "../../components/SearchButton";
+import Ad from "../../components/Ad";
+import TopCreator from "../../components/TopCreators";
+import UpcomingFeatures from "../../components/UpcomingFeatures";
 
 import { useAppSelector } from "../../hooks";
 import PostSkeleton from "../../components/Skeletons/PostSkeleton";
@@ -40,13 +43,54 @@ const Body = styled("div")(({ theme }) => ({
 
 const MainDiv = styled("div")(({ theme }) => ({
   width: "450px",
-  marginLeft: "auto",
-  marginRight: "auto",
   padding: "75px 0px",
+  margin: "auto",
 
   [theme.breakpoints.down("sm")]: {
     width: "100%",
     padding: "75px 10px",
+  },
+}));
+
+const AdDiv = styled("div")(({ theme }) => ({
+  position: "fixed",
+  top: "65px",
+  left: "0",
+  height: "calc(100vh - 65px)",
+  width: "calc(50vw - 233px)",
+
+  display: "flex",
+  flexDirection: "column",
+
+  padding: "30px 70px",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "30px 20px",
+  },
+
+  [theme.breakpoints.down("smd")]: {
+    display: "none",
+  },
+}));
+
+const SuggestionsDiv = styled("div")(({ theme }) => ({
+  position: "fixed",
+  top: "65px",
+  right: "14px",
+  height: "calc(100vh - 65px)",
+  width: "calc(50vw - 235px)",
+
+  display: "flex",
+  flexDirection: "column",
+
+  padding: "20px 70px",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "20px 20px",
+  },
+
+  [theme.breakpoints.down("smd")]: {
+    display: "none",
   },
 }));
 
@@ -138,7 +182,8 @@ export default function Home() {
               cursor: "pointer",
             }}
           >
-            Your feed is empty !
+            <br />
+            Your feed is empty!
             <br />
             <span
               style={{ fontWeight: "700" }}
@@ -151,22 +196,19 @@ export default function Home() {
             <br />
             creators to see their posts.
             <br />
-            <span
-              style={{ fontWeight: "700" }}
-              onClick={() => {
-                navigate(
-                  "/followings/0x23e05938b4619035870836d22c4ef9988623c384"
-                );
-              }}
-            >
-              Top Creators
-            </span>
-            <br />
           </Heading>
         ) : (
           posts.map((item, i) => <Post key={i} post={item} />)
         )}
       </MainDiv>
+      <AdDiv>
+        <Ad />
+        <Ad />
+      </AdDiv>
+      <SuggestionsDiv>
+        <TopCreator />
+        <UpcomingFeatures />
+      </SuggestionsDiv>
       <SearchButton />
       <FloatingActionButton />
     </Body>
