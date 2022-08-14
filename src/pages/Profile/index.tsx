@@ -20,6 +20,9 @@ import { useAppSelector } from "../../hooks";
 import { injected } from "../../utils/connector";
 import { useDispatch } from "react-redux";
 import Loader from "../../components/Loader";
+import Ad from "../../components/Ad";
+import TopCreator from "../../components/TopCreators";
+import UpcomingFeatures from "../../components/UpcomingFeatures";
 
 const Body = styled("div")(({ theme }) => ({
   width: "100vw",
@@ -153,6 +156,48 @@ const PostTypeTab = styled("div")<{ active?: boolean }>(
     textAlign: "center",
   })
 );
+
+const AdDiv = styled("div")(({ theme }) => ({
+  position: "fixed",
+  top: "65px",
+  left: "0",
+  height: "calc(100vh - 65px)",
+  width: "calc(50vw - 233px)",
+
+  display: "flex",
+  flexDirection: "column",
+
+  padding: "30px 70px",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "30px 20px",
+  },
+
+  [theme.breakpoints.down("smd")]: {
+    display: "none",
+  },
+}));
+
+const SuggestionsDiv = styled("div")(({ theme }) => ({
+  position: "fixed",
+  top: "65px",
+  right: "14px",
+  height: "calc(100vh - 65px)",
+  width: "calc(50vw - 235px)",
+
+  display: "flex",
+  flexDirection: "column",
+
+  padding: "20px 70px",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "20px 20px",
+  },
+
+  [theme.breakpoints.down("smd")]: {
+    display: "none",
+  },
+}));
 
 export default function LetterAvatars() {
   const [createdPosts, setCreatedPosts] = useState<any[]>([]);
@@ -454,10 +499,21 @@ export default function LetterAvatars() {
             }}
           >
             close
-          </span>{" "}
+          </span>
           this Modal.
         </Heading>
       </CustomModal>
+
+      <AdDiv>
+        <Ad />
+        {/* <Ad /> */}
+        {/* <Ad /> */}
+      </AdDiv>
+      <SuggestionsDiv>
+        <TopCreator />
+        <UpcomingFeatures />
+        {/* <Ad /> */}
+      </SuggestionsDiv>
     </Body>
   );
 }

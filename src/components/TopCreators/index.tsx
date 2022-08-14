@@ -11,10 +11,9 @@ export default function TopCreator(props) {
     <div
       style={{
         width: "100%",
-        flex: "1",
       }}
     >
-      <Heading>Top Creators</Heading>
+      <Heading>Rising Creators</Heading>
       <MiniProfile
         userName={"casey_neistat"}
         address="0x23e05938b4619035870836d22c4ef9988623c384"

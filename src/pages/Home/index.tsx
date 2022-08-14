@@ -179,14 +179,13 @@ export default function Home() {
               marginTop: "30px",
               fontWeight: "400",
               fontSize: "25px",
-              cursor: "pointer",
             }}
           >
             <br />
             Your feed is empty!
             <br />
             <span
-              style={{ fontWeight: "700" }}
+              style={{ fontWeight: "700", cursor: "pointer" }}
               onClick={() => {
                 navigate("/search");
               }}
@@ -194,7 +193,7 @@ export default function Home() {
               Search &#38; Follow
             </span>
             <br />
-            creators to see their posts.
+            Creators to see their Art.
             <br />
           </Heading>
         ) : (
@@ -202,6 +201,7 @@ export default function Home() {
         )}
       </MainDiv>
       <AdDiv>
+        <Ad />
         <Ad />
         <Ad />
       </AdDiv>

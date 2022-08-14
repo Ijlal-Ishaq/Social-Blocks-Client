@@ -81,7 +81,15 @@ const FieldFileInput: React.FC<Props> = (props) => {
         >
           {!previewImage ? (
             props.children || (
-              <h3 style={{ padding: "30px 0px" }}>Select Image.</h3>
+              <h3
+                style={{
+                  padding: "20px 0px",
+                  fontWeight: "400",
+                  opacity: "0.7",
+                }}
+              >
+                Select Image.
+              </h3>
             )
           ) : (
             <img

@@ -78,7 +78,7 @@ const Profile: React.FC<Props> = (props) => {
           style={{
             marginLeft: "auto",
             height: "30px",
-            width: "30px",
+            width: "20px",
             cursor: "pointer",
           }}
         />

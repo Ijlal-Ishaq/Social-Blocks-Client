@@ -21,8 +21,8 @@ const MainDiv = styled("div")(({ theme }) => ({
 const Heading = styled("div")(({ theme }) => ({
   fontSize: "15px",
   lineHeight: "15px",
-  fontWeight: "700",
-  color: theme.palette.text.primary,
+  fontWeight: "600",
+  color: theme.palette.primary.main,
   textAlign: "left",
   cursor: "pointer",
   marginBottom: "5px",

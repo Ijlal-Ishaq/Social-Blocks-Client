@@ -36,17 +36,14 @@ const Body = styled("div")(({ theme }) => ({
 }));
 
 const MainDiv = styled("div")(({ theme }) => ({
-  width: "500px",
+  width: "450px",
   height: "fit-content",
-  marginLeft: "auto",
-  marginRight: "auto",
-  marginTop: "100px",
-  marginBottom: "100px",
+  margin: "60px auto",
   backgroundColor: theme.palette.background.paper,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "9px",
   boxShadow: "0 0 1rem 0 " + alpha("#000", 0.2),
-  padding: "50px",
+  padding: "30px 20px",
 
   [theme.breakpoints.down("sm")]: {
     width: "90%",
@@ -56,48 +53,56 @@ const MainDiv = styled("div")(({ theme }) => ({
 }));
 
 const Heading = styled("div")(({ theme }) => ({
-  fontSize: "30px",
-  fontWeight: "500",
+  fontSize: "25px",
+  fontWeight: "700",
   color: theme.palette.text.primary,
-  marginBottom: "30px",
+  textAlign: "center",
+  marginBottom: "15px",
 }));
 
 const Label = styled("div")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "500",
   color: theme.palette.text.primary,
   textAlign: "left",
   width: "100%",
-  marginTop: "15px",
+  marginTop: "10px",
+  marginBottom: "3px",
 }));
 
 const Input = styled("input")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "400",
   color: theme.palette.text.primary,
   margin: "5px 0px",
   marginTop: "0px",
-  padding: "9px 18px",
+  padding: "7px 14px",
   width: "100%",
   backgroundColor: theme.palette.background.default,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "5px",
+  marginBottom: "0px",
+
+  ":focus": {
+    outline: "none",
+  },
 }));
 
 const TextArea = styled("textarea")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "400",
   color: theme.palette.text.primary,
   margin: "5px 0px",
   marginTop: "0px",
-  padding: "9px 18px",
+  padding: "7px 14px",
   width: "100%",
   backgroundColor: theme.palette.background.default,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "5px",
   overflowY: "auto",
   resize: "vertical",
   minHeight: "100px",
+  marginBottom: "0px",
 
   "::-webkit-scrollbar": {
     width: "5px",
@@ -206,12 +211,18 @@ const Index: FC = () => {
           }}
         />
 
-        <Label>Profile Picture:</Label>
+        <Label style={{ marginTop: "4px", marginBottom: "1px" }}>
+          Profile Picture:
+        </Label>
         <div style={{ height: "fit-content" }}>
           <FieldFileInput onFileSelect={setSelectedFile} />
         </div>
-        <br />
-        <Button onClick={createUser}>Register</Button>
+        <Button
+          onClick={createUser}
+          style={{ width: "100%", marginTop: "25px", marginBottom: "0px" }}
+        >
+          Register
+        </Button>
         <CustomModal open={loading} handleClose={() => {}}>
           <Loader />
           <br /> <br />

@@ -11,7 +11,7 @@ export default function UpcomingFeatures(props) {
     <div
       style={{
         width: "100%",
-        flex: "1",
+        marginTop: "10px",
       }}
     >
       <Heading>Upcoming Features</Heading>

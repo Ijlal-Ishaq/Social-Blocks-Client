@@ -209,13 +209,12 @@ const Post: React.FC<Props> = (props) => {
           }
           onClick={() => navigate(`/post/${props.post._id}`)}
         />
-        {/* {props.post.owner.id !== props.post.creator.id ? ( */}
-        {true ? (
+        {props.post.owner.id !== props.post.creator.id ? (
           <div
             style={{
               position: "absolute",
               bottom: "19px",
-              right: "50px",
+              right: "53px",
               padding: "5px 10px",
               borderRadius: "7px",
               display: "flex",
@@ -248,7 +247,7 @@ const Post: React.FC<Props> = (props) => {
           style={{
             position: "absolute",
             bottom: "19px",
-            right: "7px",
+            right: "10px",
             borderRadius: "7px",
             height: "35px",
             width: "35px",

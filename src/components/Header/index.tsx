@@ -38,7 +38,7 @@ const Input = styled("input")<{ isSearchPage? }>(({ theme, isSearchPage }) => ({
   width: "400px",
   backgroundColor: alpha(theme.palette.background.default, 0.5),
   border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
-  borderRadius: "13px",
+  borderRadius: "10px",
   margin: "7px 0px",
   marginLeft: "auto",
   marginRight: "auto",

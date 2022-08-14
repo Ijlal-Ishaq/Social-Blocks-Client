@@ -42,17 +42,14 @@ const Body = styled("div")(({ theme }) => ({
 }));
 
 const MainDiv = styled("div")(({ theme }) => ({
-  width: "500px",
+  width: "450px",
   height: "fit-content",
-  marginLeft: "auto",
-  marginRight: "auto",
-  marginTop: "100px",
-  marginBottom: "100px",
+  margin: "60px auto",
   backgroundColor: theme.palette.background.paper,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "9px",
   boxShadow: "0 0 1rem 0 " + alpha("#000", 0.2),
-  padding: "50px",
+  padding: "30px 20px",
 
   "::-webkit-scrollbar": {
     width: "13px",
@@ -79,25 +76,27 @@ const MainDiv = styled("div")(({ theme }) => ({
 }));
 
 const Label = styled("div")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "500",
   color: theme.palette.text.primary,
   textAlign: "left",
   width: "100%",
+  marginTop: "10px",
+  marginBottom: "3px",
 }));
 
 const Input = styled("input")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "400",
   color: theme.palette.text.primary,
   margin: "5px 0px",
   marginTop: "0px",
-  padding: "9px 18px",
+  padding: "7px 14px",
   width: "100%",
   backgroundColor: theme.palette.background.default,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "5px",
-  marginBottom: "20px",
+  marginBottom: "0px",
 
   ":focus": {
     outline: "none",
@@ -105,19 +104,20 @@ const Input = styled("input")(({ theme }) => ({
 }));
 
 const TextArea = styled("textarea")(({ theme }) => ({
-  fontSize: "20px",
+  fontSize: "17px",
   fontWeight: "400",
   color: theme.palette.text.primary,
   margin: "5px 0px",
   marginTop: "0px",
-  padding: "9px 18px",
+  padding: "7px 14px",
   width: "100%",
   backgroundColor: theme.palette.background.default,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "5px",
   overflowY: "auto",
   resize: "vertical",
   minHeight: "100px",
+  marginBottom: "0px",
 
   "::-webkit-scrollbar": {
     width: "5px",
@@ -132,7 +132,7 @@ const TextArea = styled("textarea")(({ theme }) => ({
 
 const Heading = styled("div")(({ theme }) => ({
   fontSize: "25px",
-  fontWeight: "500",
+  fontWeight: "700",
   color: theme.palette.text.primary,
   textAlign: "center",
   marginBottom: "15px",
@@ -142,7 +142,7 @@ const RadioIcon = styled("span")(({ theme }) => ({
   borderRadius: "50%",
   width: 20,
   height: 20,
-  border: "solid 3px " + theme.palette.text.primary,
+  border: "solid 2px " + theme.palette.text.primary,
   margin: "4px",
 }));
 
@@ -151,7 +151,7 @@ const RadioCheckIcon = styled("span")(({ theme }) => ({
   width: 20,
   height: 20,
   backgroundColor: theme.palette.primary.main,
-  border: "solid 3px " + theme.palette.text.primary,
+  border: "solid 2px " + theme.palette.text.primary,
   margin: "4px",
 }));
 
@@ -260,24 +260,22 @@ const Index: FC = () => {
     <Body>
       <MainDiv>
         <Heading>Create Post</Heading>
+        <Label>Content :</Label>
         <div style={{ height: "fit-content" }}>
           <FieldFileInput onFileSelect={setSelectedFile} />
         </div>
-        <br />
         <Label>Title :</Label>
         <Input
           placeholder="Enter title."
           value={titleValue}
           onChange={(e) => setTitleValue(e.target.value)}
         />
-        <br />
         <Label>Description :</Label>
         <TextArea
           placeholder="Enter description."
           value={descValue}
           onChange={(e) => setDescValue(e.target.value)}
         />
-        <div style={{ width: "100%", height: "10px" }} />
         <Label>Status :</Label>
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
@@ -305,6 +303,7 @@ const Index: FC = () => {
                 disableRipple
               />
             }
+            sx={{ fontFamily: "Poppins" }}
             label="Not For Sale"
           />
           <FormControlLabel
@@ -352,7 +351,6 @@ const Index: FC = () => {
             label="Buyable"
           />
         </RadioGroup>
-        <br />
         {status === "0" && (
           <>
             <Label>Price (Eth) :</Label>
@@ -362,7 +360,6 @@ const Index: FC = () => {
               onChange={(e) => setPrice(e.target.value)}
               type="number"
             />
-            <br />
           </>
         )}
         {status === "1" && (
@@ -374,7 +371,6 @@ const Index: FC = () => {
               onChange={(e) => setPrice(e.target.value)}
               type="number"
             />
-            <br />
             <Label>Bidding Duration (days) :</Label>
             <Input
               placeholder="Bidding duration in days."
@@ -382,13 +378,11 @@ const Index: FC = () => {
               onChange={(e) => setBidDuration(parseInt(e.target.value))}
               type="number"
             />
-            <br />
           </>
         )}
-        <div style={{ width: "100%", height: "10px" }} />
         <Button
           disabled={Boolean(previewImage)}
-          style={{ width: "100%", marginTop: "auto" }}
+          style={{ width: "100%", marginTop: "25px", marginBottom: "0px" }}
           onClick={() => uploadFileAndCreatePost()}
         >
           Create Post
