@@ -17,7 +17,6 @@ export const isAddressReserved = async (address, contract: any) => {
 export const createAccount = async (
   args: any[],
   address: string,
-  setModalText: any,
   contract: any,
   cb: () => void
 ) => {
@@ -33,12 +32,6 @@ export const createAccount = async (
     })
     .on("confirmation", function (confirmationNumber, receipt) {
       if (confirmationNumber === 1) {
-        setModalText("Verifying...");
-      }
-      if (confirmationNumber === 2) {
-        setModalText("Listing...");
-      }
-      if (confirmationNumber === 3) {
         cb();
       }
     });

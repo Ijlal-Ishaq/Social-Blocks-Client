@@ -5,8 +5,12 @@ import Logo1 from "../../assets/Green Logo small.png";
 import Logo2 from "../../assets/Red Logo small.png";
 import { useTheme } from "@mui/system";
 import { useMediaQuery } from "@mui/material";
-import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../utils/connector";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import {
+  NoEthereumProviderError,
+  UserRejectedRequestError,
+} from "@web3-react/injected-connector";
 
 const Header = styled("div")(({ theme }) => ({
   width: "100%",
@@ -68,11 +72,26 @@ export default function HeaderComponent(props) {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTab = useMediaQuery(theme.breakpoints.down("smd"));
 
-  const { activate, deactivate } = useWeb3React();
+  const { activate } = useWeb3React();
+
+  const getErrorMessage = (error: any) => {
+    if (error instanceof NoEthereumProviderError) {
+      return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
+    } else if (error instanceof UnsupportedChainIdError) {
+      return `You're connected to an unsupported network. Please switch to Mumbai Testnet.`;
+    } else if (error instanceof UserRejectedRequestError) {
+      return "Please authorize this website to access your Ethereum account.";
+    } else {
+      console.error(error);
+      return "An unknown error occurred. Check the console for more details.";
+    }
+  };
 
   const activateMetamaskWallet = async () => {
     try {
-      await activate(injected);
+      await activate(injected, (err) => {
+        alert(getErrorMessage(err));
+      });
     } catch (e: any) {
       console.log(e);
     }

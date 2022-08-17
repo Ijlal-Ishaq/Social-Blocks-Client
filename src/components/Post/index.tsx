@@ -8,8 +8,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { useAppSelector } from "../../hooks";
-import { useMediaQuery } from "@mui/material";
-import Transparent from "../../assets/transparent.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { injected } from "../../utils/connector";
 
@@ -43,16 +41,6 @@ const PostPicture = styled("img")(({ theme }) => ({
   boxShadow: "0 0 1rem 0 " + alpha("#000", 0.2),
   border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   cursor: "pointer",
-}));
-
-const PostDisplayname = styled("div")(({ theme }) => ({
-  fontSize: "20px",
-  fontWeight: "500",
-  color: theme.palette.text.primary,
-  textAlign: "left",
-  marginLeft: "15px",
-  cursor: "pointer",
-  wordBreak: "break-all",
 }));
 
 const PostUsername = styled("div")(({ theme }) => ({
@@ -124,7 +112,7 @@ export interface User {
 }
 
 export interface SinglePost {
-  _id: string;
+  id: string;
   creator: User;
   owner: User;
   name: string;
@@ -136,6 +124,7 @@ export interface SinglePost {
   createdAt: string;
   updatedAt: string;
   likesArray: string[];
+  metaData: string;
 }
 
 const Post: React.FC<Props> = (props) => {
@@ -143,15 +132,10 @@ const Post: React.FC<Props> = (props) => {
   const [postLikes, setPostLikes] = React.useState<any>(
     props.post.likesArray?.length
   );
-  const { account, activate } = useWeb3React();
+  const { account } = useWeb3React();
   const theme = useTheme();
-  //@ts-ignore
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const signature = useAppSelector((state) => state.userReducer.signature);
-  const walletAddress = useAppSelector(
-    (state) => state.userReducer.walletAddress
-  );
 
   useEffect(() => {
     if (account && props?.post?.likesArray?.includes(account)) {
@@ -160,21 +144,25 @@ const Post: React.FC<Props> = (props) => {
   }, [props.post.likesArray, account]);
 
   const handleLike = async () => {
-    if (!signature && !walletAddress) {
-      await activate(injected);
+    if (!account) {
+      alert("Connect Wallet!");
       return;
     }
 
     setLikeStatus(true);
     setPostLikes(postLikes + 1);
 
-    await axios.post("https://socialblocks.herokuapp.com/likes/setLikes", {
-      postId: props.post._id,
+    await axios.post("http://localhost:5001/likes/setLikes", {
+      postId: props.post.id,
       postUserAddress: props.post.owner.id,
-      userAddress: walletAddress,
+      userAddress: account,
       signature,
     });
   };
+
+  useEffect(() => {
+    console.log(props.post);
+  }, []);
 
   if (!props.post.owner?.id) return null;
 
@@ -183,7 +171,9 @@ const Post: React.FC<Props> = (props) => {
       <PostHeader>
         <PostPicture
           onClick={() => navigate(`/profile/${props.post.owner.id}`)}
-          src={props.post.owner.image}
+          src={
+            "https://benjaminkor2.infura-ipfs.io/ipfs/" + props.post.owner.image
+          }
         />
         <PostUsername
           onClick={() => navigate(`/profile/${props.post.owner.id}`)}
@@ -198,16 +188,16 @@ const Post: React.FC<Props> = (props) => {
             width: "25px",
             cursor: "pointer",
           }}
-          onClick={() => navigate(`/post/${props.post._id}`)}
+          onClick={() => navigate(`/post/${props.post.id}`)}
         />
       </PostHeader>
       <div style={{ position: "relative" }}>
         <PostContent
-          // src={props.post.image}
           src={
-            "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGVuc3xlbnwwfHwwfHw%3D&w=1000&q=80"
+            "https://benjaminkor2.infura-ipfs.io/ipfs/" +
+            JSON.parse(props.post.metaData).image
           }
-          onClick={() => navigate(`/post/${props.post._id}`)}
+          onClick={() => navigate(`/post/${props.post.id}`)}
         />
         {props.post.owner.id !== props.post.creator.id ? (
           <div
@@ -291,19 +281,19 @@ const Post: React.FC<Props> = (props) => {
               flex: 1,
             }}
           >
-            {props.post.name}
+            {JSON.parse(props.post.metaData).name}
           </PostDescription>
           {props.post.buyStatus === 2 ? (
-            <PostBuy onClick={() => navigate(`/post/${props.post._id}`)}>
+            <PostBuy onClick={() => navigate(`/post/${props.post.id}`)}>
               NFS
             </PostBuy>
           ) : props.post.buyStatus === 1 ? (
-            <PostBuy onClick={() => navigate(`/post/${props.post._id}`)}>
+            <PostBuy onClick={() => navigate(`/post/${props.post.id}`)}>
               Bidding
             </PostBuy>
           ) : (
-            <PostBuy onClick={() => navigate(`/post/${props.post._id}`)}>
-              {props.post.sellValue / 10 ** 18} Eth
+            <PostBuy onClick={() => navigate(`/post/${props.post.id}`)}>
+              {props.post.sellValue / 10 ** 18} Matic
             </PostBuy>
           )}
         </div>
@@ -316,7 +306,7 @@ const Post: React.FC<Props> = (props) => {
             lineHeight: "15px",
           }}
         >
-          ~{props.post.description}
+          ~{JSON.parse(props.post.metaData).description}
         </PostDescription>
       </PostBottom>
     </MainDiv>

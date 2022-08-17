@@ -162,17 +162,7 @@ const Index = () => {
     if (active && contract) {
       redirect();
     }
-  }, [active, contract]);
-
-  useEffect(() => {
-    if (chainId && chainId !== 4) {
-      console.log("chainId : ", chainId);
-      deactivate();
-      alert(
-        `Warning:\nYou are connected to wrong network please connect to "Rinkeby Test Network".`
-      );
-    }
-  }, [account, active, chainId]);
+  }, [active, contract, account]);
 
   return <div>{active ? ConnectedRoutes() : NotConnectedRoutes()}</div>;
 };

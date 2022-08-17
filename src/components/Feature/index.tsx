@@ -10,7 +10,7 @@ const MainDiv = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: "9px",
-  boxShadow: "0 0 1rem 0 " + alpha("#000", 0.2),
+  // boxShadow: "0 0 1rem 0 " + alpha("#000", 0.2),
   cursor: "pointer",
   overflow: "hidden",
   padding: "9px",

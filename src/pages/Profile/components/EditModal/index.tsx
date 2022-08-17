@@ -1,15 +1,13 @@
 import { styled, alpha } from "@mui/system";
 import { FC, useState } from "react";
 import { create } from "ipfs-http-client";
-import { useNavigate } from "react-router-dom";
-
 import FieldFileInput from "../../../../components/FieldFileInput";
 import Button from "../../../../components/Button";
 import { updateAccount } from "../../../../utils/contractMethods";
 import CustomModal from "../../../../components/CustomModal";
 import Loader from "../../../../components/Loader";
 import { useAppSelector } from "../../../../hooks";
-import { useDispatch } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 
 const Container = styled("div")(({ theme }) => ({
   width: "100%",
@@ -108,49 +106,54 @@ const Index: FC<Prop> = (props) => {
   const [image] = useState(props.image);
   const [displayName, setDisplayName] = useState(props.displayName);
   const [bio, setBio] = useState(props.bio);
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean>(false);
+  const { account } = useWeb3React();
 
-  const navigate = useNavigate();
-
-  const walletAddress = useAppSelector(
-    (state) => state.userReducer.walletAddress
-  );
+  const contract = useAppSelector((state) => state.contractReducer.contract);
 
   const uploadToIPFS = async () => {
+    const projectId = "2DFPFIAaXx9w2afULnEiEsSk6VF";
+    const projectSecret = "9efe90a3f717625277f8464bc47952f1";
+
+    const auth =
+      "Basic " +
+      Buffer.from(projectId + ":" + projectSecret).toString("base64");
+
     const options = {
       host: "ipfs.infura.io",
       port: 5001,
       protocol: "https",
-      repo: "ipfs",
-      pin: true,
-      start: true,
-      EXPERIMENTAL: {
-        pubsub: true,
+      headers: {
+        authorization: auth,
       },
     };
     const client = create(options); //create("https://ipfs.infura.io:5001/api/v0");
     const added = await client.add(selectedFile);
-    const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+    const url = added.cid.toString();
     return url;
   };
 
   async function updateUser() {
+    if (!account) {
+      alert("Connect Wallet!");
+      return;
+    }
     setLoading(true);
     try {
       const img = selectedFile ? await uploadToIPFS() : image;
 
       console.log("img", img, props.username, displayName, bio);
 
-      // await updateAccount(
-      //   [props.username, displayName, bio, img],
-      //   walletAddress!,
-      //   () => {
-      //     props.reloadData();
-      //     setLoading(false);
-      //     props.handleClose();
-      //   }
-      // );
+      await updateAccount(
+        [props.username, displayName, bio, img],
+        account,
+        contract,
+        () => {
+          props.reloadData();
+          setLoading(false);
+          props.handleClose();
+        }
+      );
     } catch (error) {
       console.error(error);
     }
@@ -192,8 +195,8 @@ const Index: FC<Prop> = (props) => {
       <Button onClick={updateUser}>Submit</Button>
       <CustomModal open={loading} handleClose={() => {}}>
         <Loader />
-        <br /> <br />
-        <Heading>Editing Profile...</Heading>
+        <div style={{ width: "100%", height: "30px" }} />
+        <Heading>Editing Profile</Heading>
       </CustomModal>
     </Container>
   );

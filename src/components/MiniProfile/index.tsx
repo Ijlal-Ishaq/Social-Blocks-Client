@@ -1,6 +1,5 @@
 import React from "react";
 import { styled, alpha } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
@@ -35,15 +34,6 @@ const PostPicture = styled("img")(({ theme }) => ({
   objectFit: "cover",
   borderRadius: "40px",
   border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
-  cursor: "pointer",
-}));
-
-const PostDisplayname = styled("div")(({ theme }) => ({
-  fontSize: "17px",
-  fontWeight: "400",
-  color: theme.palette.text.primary,
-  textAlign: "left",
-  marginLeft: "15px",
   cursor: "pointer",
 }));
 

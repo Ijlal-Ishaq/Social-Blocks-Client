@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { alpha, styled } from "@mui/material";
@@ -125,27 +126,137 @@ export default function Home() {
     (state) => state.userReducer.changesModalVisible
   );
 
+  const getFollowings = async () => {
+    let response = await axios({
+      url: `https://socialblocks.herokuapp.com/users/getFollowing/${account?.toLowerCase()}`,
+      method: "get",
+    });
+    if (response?.data) {
+      return response?.data?.data;
+    } else {
+      return [];
+    }
+  };
+
+  const getFollowingsPosts = async (following) => {
+    let addressesString = "";
+
+    following.forEach((e) => {
+      addressesString += '"' + e.toString() + '",';
+    });
+
+    addressesString += '"' + account?.toLowerCase() + '",';
+
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+        {
+          posts(first:1000 orderBy:createdAt orderDirection:desc where:{creator_in:[${addressesString}] owner_in:[${addressesString}]}){
+            id
+            creator{
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+              rewardClaimed
+              createdAt
+            }
+            owner{
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+              rewardClaimed
+              createdAt
+            }
+            uri
+            buyStatus
+            sellValue
+            metaData
+            transferHistory
+            createdAt
+          }
+        }
+      `,
+      }
+    );
+
+    if (result.data?.data?.posts) {
+      return result.data?.data?.posts;
+    } else {
+      return [];
+    }
+  };
+
+  const getAllPosts = async () => {
+    setLoading(true);
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+        {
+          posts(first:1000 orderBy:createdAt orderDirection:desc){
+            id
+            creator{
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+              rewardClaimed
+              createdAt
+            }
+            owner{
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+              rewardClaimed
+              createdAt
+            }
+            uri
+            buyStatus
+            sellValue
+            metaData
+            transferHistory
+            createdAt
+          }
+        }
+      `,
+      }
+    );
+
+    if (result.data?.data?.posts) {
+      setPosts(result.data?.data?.posts);
+    }
+    setLoading(false);
+  };
+
   const getPosts = async () => {
     setLoading(true);
-    await axios({
-      url: `https://socialblocks.herokuapp.com/posts/getPosts/${account}`,
-      method: "get",
-    }).then((response) => {
-      if (response?.data) {
-        setPosts(response.data.sort((a, b) => Number(b._id) - Number(a._id)));
+    let following = await getFollowings();
+    let posts = await getFollowingsPosts(following);
 
-        dispatch({ type: "SET_CHANGES_MODAL_VISIBLE", payload: false });
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      }
-    });
+    setPosts(posts);
+    dispatch({ type: "SET_CHANGES_MODAL_VISIBLE", payload: false });
+    setLoading(false);
   };
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    if (account) {
+      getPosts();
+    } else {
+      getAllPosts();
+    }
+  }, [account]);
 
   useEffect(() => {
     if (fetchData) {

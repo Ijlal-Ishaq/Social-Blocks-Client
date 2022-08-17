@@ -74,19 +74,68 @@ export default function Home() {
 
   const getAllUsers = async () => {
     setLoading(true);
-    await axios({
-      url: `https://socialblocks.herokuapp.com/users/getFollowing/${address}`,
+    let res = await axios({
+      url: `http://localhost:5001/users/getFollowing/${address.toLowerCase()}`,
       method: "get",
-    }).then((response) => {
-      if (response?.data) {
-        setAllUsers(response.data.data);
-        setSearchedUsers(response.data.data);
-        setUser(response?.data?.user);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      }
     });
+
+    if (res?.data) {
+      let addressesString = "";
+
+      res.data.data.forEach((e) => {
+        addressesString += '"' + e.toString() + '",';
+      });
+
+      const result = await axios.post(
+        "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+        {
+          query: `
+          {
+            users(where:{id_in:[${addressesString}]}){
+              userName
+              displayName
+              id
+              address
+              bio
+              image
+              rewardClaimed
+              createdAt
+            }
+          }
+          
+        `,
+        }
+      );
+
+      setAllUsers(result.data?.data?.users);
+      setSearchedUsers(result.data?.data?.users);
+    }
+  };
+
+  const getUserDetails = async () => {
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+      {
+        user(id:"${address.toLowerCase()}"){
+          userName
+          displayName
+          id
+          address
+          bio
+          image
+          rewardClaimed
+          createdAt
+        }
+      }
+      `,
+      }
+    );
+
+    if (result.data?.data?.user) {
+      setUser({ ...result.data?.data?.user });
+    }
   };
 
   useEffect(() => {
@@ -95,6 +144,7 @@ export default function Home() {
 
   useEffect(() => {
     if (address !== "") {
+      getUserDetails();
       getAllUsers();
     }
   }, [address]);
@@ -126,11 +176,11 @@ export default function Home() {
       />
       <MainDiv>
         <Heading style={{ marginTop: "30px" }}>
-          {user ? user?.displayName + "'s followings" : "Loading..."}
+          {user ? "@" + user?.userName + "'s followings" : "Loading..."}
         </Heading>
         {loading ? (
           getSkeleton()
-        ) : searchedUsers.length === 0 ? (
+        ) : searchedUsers?.length === 0 ? (
           <Heading style={{ marginTop: "30px" }}>No User Found.</Heading>
         ) : (
           <>

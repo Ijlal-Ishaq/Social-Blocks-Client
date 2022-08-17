@@ -123,7 +123,7 @@ const Index: FC = () => {
   const [invalidInput, setInvalidInput] = useState<boolean>(false);
   const { account } = useWeb3React();
 
-  const [modalText, setModalText] = useState<string>("Registering...");
+  const [modalText] = useState<string>("Registering");
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -148,7 +148,7 @@ const Index: FC = () => {
     };
     const client = create(options); //create("https://ipfs.infura.io:5001/api/v0");
     const added = await client.add(selectedFile);
-    const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+    const url = added.cid.toString();
     return url;
   };
 
@@ -161,6 +161,7 @@ const Index: FC = () => {
     }
 
     if (!account) {
+      alert("Connect Wallet!");
       return;
     }
 
@@ -172,7 +173,6 @@ const Index: FC = () => {
       await createAccount(
         [userName, displayName, bio, image],
         account!,
-        setModalText,
         contract,
         async () => {
           setLoading(false);
@@ -225,7 +225,7 @@ const Index: FC = () => {
         </Button>
         <CustomModal open={loading} handleClose={() => {}}>
           <Loader />
-          <br /> <br />
+          <div style={{ width: "100%", height: "30px" }} />
           <Heading>{modalText}</Heading>
         </CustomModal>
       </MainDiv>

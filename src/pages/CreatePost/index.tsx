@@ -1,14 +1,12 @@
-import { FC, useRef, useState } from "react";
+import { FC, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import { create } from "ipfs-http-client";
 
 import FieldFileInput, { CustomFile } from "../../components/FieldFileInput";
 import Button from "../../components/Button";
-import { createPost } from "../../utils/contractMethods";
 import CustomModal from "../../components/CustomModal";
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { useWeb3React } from "@web3-react/core";
@@ -171,16 +169,12 @@ const Index: FC = () => {
   const [price, setPrice] = useState("");
   const theme = useTheme();
   const [bidDuration, setBidDuration] = useState<number>(0);
-  const [modalText, setModalText] = useState<string>("Creating post...");
+  const [modalText] = useState<string>("Creating Post");
   const web3Context = useWeb3React();
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStatus((event.target as HTMLInputElement).value);
   };
-
-  const walletAddress = useAppSelector(
-    (state) => state.userReducer.walletAddress
-  );
 
   const navigate = useNavigate();
 
@@ -199,13 +193,25 @@ const Index: FC = () => {
 
         const arrayBuffer = await selectedFile.arrayBuffer();
 
-        const ipfs = create({
+        const projectId = "2DFPFIAaXx9w2afULnEiEsSk6VF";
+        const projectSecret = "9efe90a3f717625277f8464bc47952f1";
+
+        const auth =
+          "Basic " +
+          Buffer.from(projectId + ":" + projectSecret).toString("base64");
+
+        const options = {
           host: "ipfs.infura.io",
           port: 5001,
           protocol: "https",
-        });
+          headers: {
+            authorization: auth,
+          },
+        };
 
-        const result = await ipfs.add({
+        const client = create(options); //create("https://ipfs.infura.io:5001/api/v0");
+
+        const result = await client.add({
           path: "socialblocks",
           content: arrayBuffer,
         });
@@ -213,9 +219,9 @@ const Index: FC = () => {
         let URI_Obj = {
           name: titleValue,
           description: descValue,
-          image: "https://ipfs.infura.io/ipfs/" + result.cid.toString(),
+          image: result.cid.toString(),
         };
-        let URI = await ipfs.add(JSON.stringify(URI_Obj));
+        let URI = await client.add(JSON.stringify(URI_Obj));
 
         const web3 = new Web3(web3Context?.library?.currentProvider);
         const contract = new web3.eth.Contract(
@@ -231,7 +237,8 @@ const Index: FC = () => {
             status,
             Web3.utils.toWei(price),
             Math.floor(date.getTime() / 1000).toString(),
-            "https://ipfs.infura.io/ipfs/" + URI.cid.toString()
+            URI.cid.toString(),
+            JSON.stringify(URI_Obj)
           )
           .send({
             from: web3Context.account,
@@ -239,14 +246,12 @@ const Index: FC = () => {
           .on("transactionHash", (hash) => {
             // console.log("hash 0", hash);
           })
-          .on("confirmation", function (confirmationNumber, receipt) {
+          .on("error", () => {
+            // console.log("hash 0", hash);
+            setLoading(false);
+          })
+          .on("confirmation", function (confirmationNumber) {
             if (confirmationNumber === 1) {
-              setModalText("Verifying Post...");
-            }
-            if (confirmationNumber === 2) {
-              setModalText("Listing Post...");
-            }
-            if (confirmationNumber === 3) {
               navigate("/home");
             }
           });
@@ -389,7 +394,7 @@ const Index: FC = () => {
         </Button>
         <CustomModal open={loading} handleClose={() => {}}>
           <Loader />
-          <br /> <br />
+          <div style={{ width: "100%", height: "30px" }} />
           <Heading>{modalText}</Heading>
         </CustomModal>
       </MainDiv>

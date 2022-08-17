@@ -19,7 +19,6 @@ import contractAbi from "../../contract/contractAbi.json";
 import ChangeStatusModal from "./ChangeStatusModal/index";
 import User from "../../components/User";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { injected } from "../../utils/connector";
 import Ad from "../../components/Ad";
@@ -309,37 +308,83 @@ const PostDetail: FC = () => {
 
   const theme = useTheme();
   //@ts-ignore
-  const isMobile = useMediaQuery(theme?.breakpoints?.down("sm"));
 
   const getPostDetails = async () => {
     if (postId !== "") {
-      const result = await axios.get(
-        "https://socialblocks.herokuapp.com/posts/getSinglePost/" + postId
+      const result = await axios.post(
+        "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+        {
+          query: `
+          {
+            post(id:"${postId.toString()}"){
+              id
+              creator{
+                id
+                address
+                userName
+                displayName
+                bio
+                image
+                rewardClaimed
+                createdAt
+              }
+              owner{
+                id
+                address
+                userName
+                displayName
+                bio
+                image
+                rewardClaimed
+                createdAt
+              }
+              uri
+              buyStatus
+              sellValue
+              metaData
+              transferHistory
+              createdAt
+            }
+          }
+        `,
+        }
       );
+
+      if (result.data?.data?.post) {
+        setPostDetails(result.data?.data?.post);
+      }
+
       const transferResult = await axios.get(
-        "https://socialblocks.herokuapp.com/posts/getTransferHistory/" + postId
+        "http://localhost:5001/posts/getTransferHistory/" + postId
       );
-      setPostDetails({ ...result?.data?._doc });
+
       setTransferHistory(transferResult?.data?.usersInOrder);
-      setLikes(result?.data?.likesArray);
+
+      const likes = await axios.post("http://localhost:5001/likes/getlikes/", {
+        postId,
+      });
+
+      setLikes(likes?.data.likesArray);
+
+      // setLikes(result?.data?.likesArray);
       setLoadDataModalStatus(false);
     }
   };
 
   const setComment = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
 
     if (commentText !== "") {
       setCommentingModalStatus(true);
       let result = await axios.post(
-        "https://socialblocks.herokuapp.com/comment/setcomment",
+        "http://localhost:5001/comment/setcomment",
         {
           postId: parseInt(postId),
           comment: commentText,
-          userAddress: walletAddress?.toLowerCase(),
+          userAddress: account?.toLowerCase(),
           signature,
         }
       );
@@ -352,7 +397,7 @@ const PostDetail: FC = () => {
   const getComments = async () => {
     if (postId !== "") {
       const result = await axios.get(
-        "https://socialblocks.herokuapp.com/comment/getcomments/" + postId
+        "http://localhost:5001/comment/getcomments/" + postId
       );
       setComments(result?.data?.comments);
       if (result?.data?.comments?.length == 0) {
@@ -389,17 +434,14 @@ const PostDetail: FC = () => {
   };
 
   const reloadData = async () => {
-    setLoadDataModalStatus(true);
-    setTimeout(() => {
-      let post_id = postId;
-      setPostId("0");
-      setPostId(post_id);
-    }, 20000);
+    let post_id = postId;
+    setPostId("0");
+    setPostId(post_id);
   };
 
   const buy = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
     const web3 = new Web3(web3Context?.library?.currentProvider);
@@ -534,7 +576,7 @@ const PostDetail: FC = () => {
 
   const bid = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
     const web3 = new Web3(web3Context?.library?.currentProvider);
@@ -569,7 +611,7 @@ const PostDetail: FC = () => {
 
   const claimBid = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
     const web3 = new Web3(web3Context?.library?.currentProvider);
@@ -637,12 +679,17 @@ const PostDetail: FC = () => {
             >
               PostId#{postId}
             </Heading>
-            <PostContent src={postDetails?.image} />
+            <PostContent
+              src={
+                "https://benjaminkor2.infura-ipfs.io/ipfs/" +
+                JSON.parse(postDetails?.metaData).image
+              }
+            />
             <Heading style={{ marginTop: "10px", fontWeight: "700" }}>
-              {postDetails?.name}
+              {JSON.parse(postDetails?.metaData).name}
             </Heading>
             <Heading style={{ fontSize: "17px", marginTop: "10px" }}>
-              "{postDetails?.description}"
+              "{JSON.parse(postDetails?.metaData).description}"
             </Heading>
             <InfoContainer>
               <InfoTab>
@@ -658,14 +705,16 @@ const PostDetail: FC = () => {
               <InfoTab>
                 <div>
                   {postDetails.buyStatus == 0 ? (
-                    <>{postDetails?.sellValue / 10 ** 18}Ξ</>
+                    <>{postDetails?.sellValue / 10 ** 18}</>
                   ) : postDetails.buyStatus == 1 ? (
-                    <>{biddingPrice}Ξ</>
+                    <>{biddingPrice}</>
                   ) : (
                     <>NFS</>
                   )}
                 </div>
-                <div style={{ fontSize: "15px", fontWeight: "500" }}>Value</div>
+                <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                  Value<span style={{ fontSize: "10px" }}>(Matic)</span>
+                </div>
               </InfoTab>
             </InfoContainer>
             {postDetails?.owner?.address === account?.toLowerCase() ? (
@@ -688,7 +737,7 @@ const PostDetail: FC = () => {
                   }}
                 >
                   <a
-                    href="https://rinkeby.etherscan.io/address/0xcfb6f890d0a605a3e0b767b0ce32fad25ec96de8"
+                    href="https://mumbai.polygonscan.com/address/0x076c5102C870AA5Ac9d1336947dFbD5d9Fbb6991"
                     target={"_blank"}
                     style={{
                       fontWeight: "700",
@@ -705,7 +754,7 @@ const PostDetail: FC = () => {
                     style={{ transform: "rotate(90deg)" }}
                     onClick={() => {
                       window.open(
-                        "https://rinkeby.etherscan.io/address/0xcfb6f890d0a605a3e0b767b0ce32fad25ec96de8",
+                        "https://mumbai.polygonscan.com/address/0x076c5102C870AA5Ac9d1336947dFbD5d9Fbb6991",
                         "_blank"
                       );
                     }}
@@ -776,9 +825,9 @@ const PostDetail: FC = () => {
                     }}
                   >
                     {postDetails.buyStatus == 0 ? (
-                      <>&#8226; {postDetails?.sellValue / 10 ** 18}Eth</>
+                      <>&#8226; {postDetails?.sellValue / 10 ** 18} Matic</>
                     ) : postDetails.buyStatus == 1 ? (
-                      <>&#8226; {postDetails?.sellValue / 10 ** 18}Eth</>
+                      <>&#8226; {postDetails?.sellValue / 10 ** 18} Matic</>
                     ) : (
                       <>&#8226; Not For Sale.</>
                     )}
@@ -850,7 +899,7 @@ const PostDetail: FC = () => {
                       fontWeight: "700",
                     }}
                   >
-                    &#8226; {biddingPrice} Eth
+                    &#8226; {biddingPrice} Matic
                   </Heading>
                   <Heading
                     style={{
@@ -900,7 +949,7 @@ const PostDetail: FC = () => {
                           marginBottom: "0px",
                         }}
                       >
-                        Your Bid (Eth) :
+                        Your Bid (Matic) :
                       </Heading>
                       <Input
                         placeholder="Enter amount"
@@ -1065,18 +1114,18 @@ const PostDetail: FC = () => {
             )}
             <CustomModal open={commentingModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Adding Comment...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Adding Comment</Heading>
             </CustomModal>
             <CustomModal open={buyModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Buying Post...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Buying Post</Heading>
             </CustomModal>
             <CustomModal open={claimModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Claming Reward...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Claming Reward</Heading>
             </CustomModal>
             <CustomFormModal
               open={statusFormModalStatus}
@@ -1085,25 +1134,25 @@ const PostDetail: FC = () => {
               }}
             >
               <ChangeStatusModal
-                title={postDetails?.name}
-                description={postDetails?.description}
+                title={JSON.parse(postDetails?.metaData)?.name}
+                description={JSON.parse(postDetails?.metaData)?.description}
                 changeStatus={changeStatus}
               />
             </CustomFormModal>
             <CustomModal open={statusModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Changing Status...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Changing Status</Heading>
             </CustomModal>
             <CustomModal open={biddingModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Bidding...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Bidding</Heading>
             </CustomModal>
             <CustomModal open={claimingBidModalStatus} handleClose={() => {}}>
               <Loader />
-              <br /> <br />
-              <Heading>Claming...</Heading>
+              <div style={{ width: "100%", height: "30px" }} />
+              <Heading>Claming</Heading>
             </CustomModal>
             <CustomModal
               open={loadDataModalStatus}
@@ -1112,7 +1161,7 @@ const PostDetail: FC = () => {
               }}
             >
               <Loader />
-              <br /> <br />
+              <div style={{ width: "100%", height: "30px" }} />
               <Heading style={{ fontWeight: "400", fontSize: "20px" }}>
                 Changes might take 10-15 secs to Reflect, you can{" "}
                 <span

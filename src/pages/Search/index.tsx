@@ -70,17 +70,29 @@ export default function Home() {
 
   const getAllUsers = async () => {
     setLoading(true);
-    await axios({
-      url: `https://socialblocks.herokuapp.com/users/getAllUsers`,
-      method: "get",
-    }).then((response) => {
-      if (response?.data) {
-        setAllUsers(response.data);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
+
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+        {
+          users(first:1000){
+            userName
+            displayName
+            id
+            address
+            bio
+            image
+            rewardClaimed
+            createdAt
+          }
+        }
+        
+      `,
       }
-    });
+    );
+
+    setAllUsers(result.data?.data?.users);
   };
 
   useEffect(() => {

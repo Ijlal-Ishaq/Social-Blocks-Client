@@ -26,12 +26,6 @@ type Props = {
   circleShape?: boolean;
 };
 
-interface PreviewImageParams {
-  src: string;
-  height: number;
-  width: number;
-}
-
 export interface CustomFile extends File {
   buffer: ArrayBuffer;
 }

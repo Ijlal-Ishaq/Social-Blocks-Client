@@ -1,5 +1,6 @@
-import { styled, alpha } from "@mui/material";
+import { styled } from "@mui/material";
 import MiniProfile from "../MiniProfile";
+import MiniProfileSkeleton from "../Skeletons/MiniProfileSkeleton";
 
 const Heading = styled("div")(({ theme }) => ({
   fontSize: "20px",
@@ -33,11 +34,12 @@ export default function TopCreator(props) {
           "https://starktimes.com/wp-content/uploads/2022/03/Peter-McKinnon-7.jpg"
         }
       />
-      <MiniProfile
+      {/* <MiniProfile
         userName={"irfan_junejo"}
         address="0x23e05938b4619035870836d22c4ef9988623c384"
         image={"https://i.hipinpakistan.com/large/2018/10/5bcdd224927cd.jpg"}
-      />
+      /> */}
+      <MiniProfileSkeleton />
     </div>
   );
 }

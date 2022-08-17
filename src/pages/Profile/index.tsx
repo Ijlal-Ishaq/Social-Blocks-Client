@@ -9,7 +9,6 @@ import CustomFormModal from "../../components/CustomFormModal";
 import { useWeb3React } from "@web3-react/core";
 import Button from "../../components/Button";
 import EditModal from "./components/EditModal";
-import CreateIcon from "@mui/icons-material/Create";
 import { useTheme } from "@emotion/react";
 import Transparent from "../../assets/transparent.png";
 import { useMediaQuery } from "@mui/material";
@@ -17,8 +16,6 @@ import UserDetailsSkeleton from "../../components/Skeletons/UserDetailsSkeleton"
 import PostSkeleton from "../../components/Skeletons/PostSkeleton";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
-import { injected } from "../../utils/connector";
-import { useDispatch } from "react-redux";
 import Loader from "../../components/Loader";
 import Ad from "../../components/Ad";
 import TopCreator from "../../components/TopCreators";
@@ -206,15 +203,18 @@ export default function LetterAvatars() {
   const [ownedPostsLoading, setOwnedPostsLoading] = useState(true);
   const [postType, setPostType] = useState<string>("owned");
   const [followStatus, setFollowStatus] = useState<boolean>(false);
-  const [fetchData, setFetchData] = useState<boolean>(false);
   const [loadDataModalStatus, setLoadDataModalStatus] = useState(false);
 
-  const [likes, setLikes] = useState(100);
+  const [likes, setLikes] = useState(0);
 
   const [address, setAddress] = useState("");
   const [user, setUser] = useState<any>(null);
+
+  const [userFollowing, setUserFollowing] = useState<any>([]);
+  const [userFollower, setUserFollower] = useState<any>([]);
+
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
-  const { account, activate } = useWeb3React();
+  const { account } = useWeb3React();
   const theme = useTheme();
   //@ts-ignore
   const isMobile = useMediaQuery(theme?.breakpoints?.down("sm"));
@@ -224,41 +224,148 @@ export default function LetterAvatars() {
     (state) => state.userReducer.walletAddress
   );
 
+  const getUserFollowing = async () => {
+    await axios({
+      url: `http://localhost:5001/users/getFollowing/${address.toLowerCase()}`,
+      method: "get",
+    }).then((response) => {
+      if (response?.data) {
+        console.log(response.data);
+        setUserFollowing(response.data.data);
+      }
+    });
+  };
+
+  const getUserFollowers = async () => {
+    await axios({
+      url: `http://localhost:5001/users/getFollowers/${address.toLowerCase()}`,
+      method: "get",
+    }).then((response) => {
+      if (response?.data) {
+        console.log(response.data);
+        setUserFollower(response.data.data);
+      }
+    });
+  };
+
   const getCreatedPosts = async () => {
-    const result = await axios.get(
-      "https://socialblocks.herokuapp.com/posts/getUserPosts?address=" +
-        address +
-        "&type=creator"
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+      {
+        posts(orderBy:createdAt orderDirection:desc where:{creator:"${address.toLowerCase()}" owner_not: "${address.toLowerCase()}"}){
+            id
+            creator {
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+            }
+            owner {
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+            }
+            uri
+            buyStatus
+            sellValue
+    				metaData
+            transferHistory
+    				createdAt
+        }
+      }
+      `,
+      }
     );
-    setCreatedPosts(result.data.sort((a, b) => Number(b._id) - Number(a._id)));
-    setTimeout(() => {
-      setOwnedPostsLoading(false);
-    }, 500);
+
+    if (result.data?.data?.posts) {
+      setCreatedPosts(result.data?.data?.posts);
+      setTimeout(() => {
+        setCreatedPostsLoading(false);
+      }, 500);
+    }
   };
 
   const getOwnedPosts = async () => {
-    const result = await axios.get(
-      "https://socialblocks.herokuapp.com/posts/getUserPosts?address=" +
-        address +
-        "&type=owner"
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+      {
+        posts(orderBy:createdAt orderDirection:desc where:{owner: "${address.toLowerCase()}"}){
+            id
+            creator {
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+            }
+            owner {
+              id
+              address
+              userName
+              displayName
+              bio
+              image
+            }
+            uri
+            buyStatus
+            sellValue
+    				metaData
+            transferHistory
+    				createdAt
+        }
+      }
+      `,
+      }
     );
-    setOwnedPosts(result.data.sort((a, b) => Number(b._id) - Number(a._id)));
-    setTimeout(() => {
-      setOwnedPostsLoading(false);
-    }, 500);
+
+    if (result.data?.data?.posts) {
+      setOwnedPosts(result.data?.data?.posts);
+      setTimeout(() => {
+        setOwnedPostsLoading(false);
+      }, 500);
+    }
   };
 
   const getUserDetails = async () => {
-    const result = await axios.get(
-      "https://socialblocks.herokuapp.com/users/details?address=" + address
+    const result = await axios.post(
+      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      {
+        query: `
+      {
+        user(id:"${address.toLowerCase()}"){
+          userName
+          displayName
+          id
+          address
+          bio
+          image
+          rewardClaimed
+          createdAt
+        }
+      }
+      `,
+      }
     );
 
-    setUser({ ...result.data });
-    setLoadDataModalStatus(false);
+    if (result.data?.data?.user) {
+      console.log(result.data?.data?.user);
+      setUser({ ...result.data?.data?.user });
+      setLoadDataModalStatus(false);
 
-    setTimeout(() => {
-      setCreatedPostsLoading(false);
-    }, 500);
+      setTimeout(() => {
+        setCreatedPostsLoading(false);
+      }, 500);
+    }
   };
 
   useEffect(() => {
@@ -270,58 +377,44 @@ export default function LetterAvatars() {
       getUserDetails();
       getCreatedPosts();
       getOwnedPosts();
+      getUserFollowers();
+      getUserFollowing();
     }
   }, [address]);
 
   useEffect(() => {
-    if (user?.followers?.includes(walletAddress?.toLowerCase())) {
+    if (user?.followers?.includes(account?.toLowerCase())) {
       setFollowStatus(true);
     }
   }, [user]);
 
-  useEffect(() => {
-    let count = 0;
-    createdPosts.forEach((e) => {
-      count += e?.likesArray?.length;
-    });
-    setLikes(count);
-  }, [createdPosts]);
-
   const follow = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
     setFollowStatus(true);
-    let result = await axios.post(
-      "https://socialblocks.herokuapp.com/users/follow",
-      {
-        userAddress: walletAddress?.toLowerCase(),
-        followUser: user?.address,
-        signature,
-      }
-    );
-    setUser((state) => ({
-      ...state,
-      followers: [...state.followers, walletAddress?.toLowerCase()],
-    }));
+    await axios.post("http://localhost:5001/users/follow", {
+      userAddress: account?.toLowerCase(),
+      address: account?.toLowerCase(),
+      followUser: user?.address,
+      signature,
+    });
+    setUserFollower([...userFollower, walletAddress?.toLowerCase()]);
     setFollowStatus(true);
   };
 
   const unFollow = async () => {
     if (!account) {
-      await activate(injected);
+      alert("Connect Wallet!");
       return;
     }
     setFollowStatus(false);
-    let result = await axios.post(
-      "https://socialblocks.herokuapp.com/users/unfollow",
-      {
-        userAddress: walletAddress?.toLowerCase(),
-        followUser: user?.address,
-        signature,
-      }
-    );
+    await axios.post("http://localhost:5001/users/unfollow", {
+      userAddress: account?.toLowerCase(),
+      followUser: user?.address,
+      signature,
+    });
     setFollowStatus(false);
   };
 
@@ -343,7 +436,7 @@ export default function LetterAvatars() {
             <ProfilePicture
               src={Transparent}
               style={{
-                backgroundImage: `url(${user?.image})`,
+                backgroundImage: `url(https://benjaminkor2.infura-ipfs.io/ipfs/${user?.image})`,
               }}
             />
             <Heading>{user?.displayName}</Heading>
@@ -370,35 +463,51 @@ export default function LetterAvatars() {
             <InfoContainer>
               <InfoTab>
                 <div>{ownedPosts.length}</div>
-                <div style={{ fontSize: "15px", fontWeight: "500" }}>Posts</div>
+                <div
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: "500",
+                  }}
+                >
+                  Posts
+                </div>
               </InfoTab>
               <InfoTab
                 onClick={() => {
                   navigate(`/followers/${user?.address}`);
                 }}
               >
-                <div>{user?.followers?.length}</div>
+                <div>{userFollower?.length}</div>
                 <div style={{ fontSize: "15px", fontWeight: "500" }}>
                   Followers
                 </div>
               </InfoTab>
-              {!isMobile ? (
-                <InfoTab
-                  onClick={() => {
-                    navigate(`/followings/${user?.address}`);
-                  }}
-                >
-                  <div>{user?.following?.length}</div>
-                  <div style={{ fontSize: "15px", fontWeight: "500" }}>
-                    Following
+              <InfoTab
+                onClick={() => {
+                  navigate(`/followings/${user?.address}`);
+                }}
+              >
+                <div>{userFollowing?.length}</div>
+                <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                  Following
+                </div>
+              </InfoTab>
+              {/* {!isMobile ? (
+                <InfoTab>
+                  <div>{user.rewardClaimed}</div>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Reward
                   </div>
                 </InfoTab>
-              ) : null}
-
-              <InfoTab>
-                <div>{likes}</div>
-                <div style={{ fontSize: "15px", fontWeight: "500" }}>Likes</div>
-              </InfoTab>
+              ) : null} */}
             </InfoContainer>
           </>
         ) : (
@@ -420,7 +529,7 @@ export default function LetterAvatars() {
               setPostType("created");
             }}
           >
-            Created Posts
+            Sold Posts
           </PostTypeTab>
         </PostTypeContainer>
 
@@ -437,7 +546,7 @@ export default function LetterAvatars() {
         ) : postType === "created" ? (
           <SubHeading>
             <br />
-            No Created Posts.
+            No Sold Posts.
           </SubHeading>
         ) : null}
 

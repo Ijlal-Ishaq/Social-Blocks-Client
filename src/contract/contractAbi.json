@@ -230,6 +230,12 @@
         "internalType": "uint256",
         "name": "sellValue",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
       }
     ],
     "name": "PostCreated",
@@ -467,12 +473,7 @@
     "inputs": [
       { "internalType": "uint256", "name": "_postId", "type": "uint256" },
       { "internalType": "uint256", "name": "_likesCount", "type": "uint256" },
-      { "internalType": "bytes", "name": "_signature", "type": "bytes" },
-      {
-        "internalType": "bytes32",
-        "name": "signedMessageHash",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes", "name": "_signature", "type": "bytes" }
     ],
     "name": "claimPostReward",
     "outputs": [],
@@ -601,7 +602,8 @@
       { "internalType": "uint8", "name": "_buyStatus", "type": "uint8" },
       { "internalType": "uint256", "name": "_sellValue", "type": "uint256" },
       { "internalType": "uint256", "name": "_bidDuration", "type": "uint256" },
-      { "internalType": "string", "name": "tokenURI_", "type": "string" }
+      { "internalType": "string", "name": "tokenURI_", "type": "string" },
+      { "internalType": "string", "name": "metadata", "type": "string" }
     ],
     "name": "mint",
     "outputs": [],
@@ -677,7 +679,7 @@
       { "internalType": "address", "name": "from", "type": "address" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
     ],
     "name": "safeTransferFrom",
     "outputs": [],
@@ -839,17 +841,14 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_signer", "type": "address" },
-      { "internalType": "bytes", "name": "_signature", "type": "bytes" },
-      {
-        "internalType": "bytes32",
-        "name": "signedMessageHash",
-        "type": "bytes32"
-      }
+      { "internalType": "address", "name": "signer", "type": "address" },
+      { "internalType": "bytes", "name": "signature", "type": "bytes" },
+      { "internalType": "uint256", "name": "likesCount", "type": "uint256" },
+      { "internalType": "uint256", "name": "claimId", "type": "uint256" }
     ],
     "name": "verify",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {

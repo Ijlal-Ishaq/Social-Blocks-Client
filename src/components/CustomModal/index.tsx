@@ -4,10 +4,10 @@ import { styled, alpha } from "@mui/material/styles";
 import { Modal } from "@mui/material";
 
 const MainDiv = styled("div")(({ theme }) => ({
-  width: 400,
-  height: 400,
+  width: 340,
+  height: 340,
   backgroundColor: theme.palette.background.paper,
-  border: "solid 3px " + alpha(theme.palette.text.primary, 0.5),
+  border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
   borderRadius: 5,
   display: "flex",
   flexDirection: "column",

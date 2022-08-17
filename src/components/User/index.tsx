@@ -1,8 +1,6 @@
 import React from "react";
 import { styled, alpha } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
-import ReplyIcon from "@mui/icons-material/Reply";
 
 const MainDiv = styled("div")(({ theme }) => ({
   width: "fit-content",
@@ -63,12 +61,13 @@ type Props = {
 
 const User: React.FC<Props> = (props) => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
     <MainDiv onClick={() => navigate(`/profile/${props.address}`)}>
       <PostHeader>
-        <PostPicture src={props.image} />
+        <PostPicture
+          src={"https://benjaminkor2.infura-ipfs.io/ipfs/" + props.image}
+        />
         <div>
           <PostDisplayname>{props.displayName}</PostDisplayname>
           <PostUsername>@{props.userName}</PostUsername>

@@ -1,7 +1,7 @@
 import React from "react";
-import { styled, alpha } from "@mui/material";
+import { alpha } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
-import { useTheme } from "@emotion/react";
+import { useTheme } from "@mui/material";
 
 const Index: React.FC = () => {
   const theme = useTheme();
@@ -24,29 +24,20 @@ const Index: React.FC = () => {
         style={{
           //@ts-ignore
           border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
+          backgroundColor: theme.palette.background.paper,
         }}
       />
 
       <Skeleton
         variant="rectangular"
-        width={"50%"}
-        height={20}
-        style={{
-          //@ts-ignore
-          border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
-          borderRadius: "8px",
-          marginBottom: "8px",
-          marginTop: "17px",
-        }}
-      />
-      <Skeleton
-        variant="rectangular"
-        width={"75%"}
+        width={"97%"}
         height={30}
         style={{
           //@ts-ignore
           border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
+          backgroundColor: theme.palette.background.paper,
           borderRadius: "8px",
+          marginTop: "17px",
         }}
       />
       <div
@@ -64,6 +55,8 @@ const Index: React.FC = () => {
           style={{
             //@ts-ignore
             border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
+            backgroundColor: theme.palette.background.paper,
+
             borderRadius: "8px",
           }}
         />
@@ -74,6 +67,8 @@ const Index: React.FC = () => {
           style={{
             //@ts-ignore
             border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
+            backgroundColor: theme.palette.background.paper,
+
             borderRadius: "8px",
           }}
         />
@@ -84,6 +79,8 @@ const Index: React.FC = () => {
           style={{
             //@ts-ignore
             border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
+            backgroundColor: theme.palette.background.paper,
+
             borderRadius: "8px",
           }}
         />
