@@ -9,6 +9,7 @@ import CustomModal from "../../components/CustomModal";
 import Loader from "../../components/Loader";
 import { useAppSelector } from "../../hooks";
 import { useWeb3React } from "@web3-react/core";
+import { useTheme } from "@mui/material/styles";
 
 const Body = styled("div")(({ theme }) => ({
   width: "100vw",
@@ -47,7 +48,7 @@ const MainDiv = styled("div")(({ theme }) => ({
 
   [theme.breakpoints.down("sm")]: {
     width: "90%",
-    padding: "30px",
+    padding: "15px",
     marginTop: "50px",
   },
 }));
@@ -68,6 +69,9 @@ const Label = styled("div")(({ theme }) => ({
   width: "100%",
   marginTop: "10px",
   marginBottom: "3px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 const Input = styled("input")(({ theme }) => ({
@@ -130,6 +134,8 @@ const Index: FC = () => {
 
   const contract = useAppSelector((state) => state.contractReducer.contract);
 
+  const theme = useTheme();
+
   const uploadToIPFS = async () => {
     const projectId = "2DFPFIAaXx9w2afULnEiEsSk6VF";
     const projectSecret = "9efe90a3f717625277f8464bc47952f1";
@@ -188,13 +194,27 @@ const Index: FC = () => {
     <Body>
       <MainDiv>
         <Heading>Register</Heading>
-        <Label>Username:</Label>
+        <Label>
+          Username:
+          <span style={{ fontSize: "10px" }}>
+            <span
+              style={{
+                color: theme.palette.primary.main,
+                fontSize: "13px",
+              }}
+            >
+              *
+            </span>
+            (should be lowercase, no spaces.)
+          </span>
+        </Label>
         <Input
           style={invalidInput ? { border: "3px solid red" } : {}}
           placeholder="Enter username"
           onChange={(e) => {
-            setUserName(e.target.value);
+            setUserName(e.target.value.toLowerCase().replaceAll(" ", ""));
           }}
+          value={userName}
         />
         <Label>Display Name:</Label>
         <Input

@@ -110,7 +110,7 @@ const NotConnectedRoutes = () => {
 };
 
 const Index = () => {
-  const { account, library, active, chainId, deactivate } = useWeb3React();
+  const { account, library, active } = useWeb3React();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

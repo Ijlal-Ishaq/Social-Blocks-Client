@@ -8,7 +8,7 @@ import CustomModal from "../../components/CustomModal";
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import { useTheme } from "@emotion/react";
+import { useTheme } from "@mui/material/styles";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 import { CONTRACT_ADDRESS } from "../../contract/constants";
@@ -62,7 +62,7 @@ const MainDiv = styled("div")(({ theme }) => ({
 
   [theme.breakpoints.down("sm")]: {
     width: "90%",
-    padding: "30px",
+    padding: "15px",
     marginTop: "50px",
 
     "::-webkit-scrollbar": {
@@ -81,6 +81,9 @@ const Label = styled("div")(({ theme }) => ({
   width: "100%",
   marginTop: "10px",
   marginBottom: "3px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 const Input = styled("input")(({ theme }) => ({
@@ -168,7 +171,7 @@ const Index: FC = () => {
   const [status, setStatus] = useState("2");
   const [price, setPrice] = useState("");
   const theme = useTheme();
-  const [bidDuration, setBidDuration] = useState<number>(0);
+  const [bidDuration, setBidDuration] = useState<number>(1);
   const [modalText] = useState<string>("Creating Post");
   const web3Context = useWeb3React();
 
@@ -269,11 +272,22 @@ const Index: FC = () => {
         <div style={{ height: "fit-content" }}>
           <FieldFileInput onFileSelect={setSelectedFile} />
         </div>
-        <Label>Title :</Label>
+        <Label>
+          Title :
+          <span style={{ fontSize: "10px" }}>
+            <span
+              style={{ color: theme.palette.primary.main, fontSize: "13px" }}
+            >
+              *
+            </span>
+            (title must not exceed 15 characters.)
+          </span>
+        </Label>
         <Input
           placeholder="Enter title."
           value={titleValue}
           onChange={(e) => setTitleValue(e.target.value)}
+          maxLength={15}
         />
         <Label>Description :</Label>
         <TextArea
@@ -358,30 +372,47 @@ const Index: FC = () => {
         </RadioGroup>
         {status === "0" && (
           <>
-            <Label>Price (Eth) :</Label>
+            <Label>Price (Matic) :</Label>
             <Input
               placeholder="Enter price."
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               type="number"
+              min={0}
             />
           </>
         )}
         {status === "1" && (
           <>
-            <Label>Base Price (Eth) :</Label>
+            <Label>Base Price (Matic) :</Label>
             <Input
               placeholder="Enter base price."
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               type="number"
+              min={0}
             />
-            <Label>Bidding Duration (days) :</Label>
+            <Label>
+              Bidding Duration (days) :
+              <span style={{ fontSize: "10px" }}>
+                <span
+                  style={{
+                    color: theme.palette.primary.main,
+                    fontSize: "13px",
+                  }}
+                >
+                  *
+                </span>
+                (minimum duration 1 day.)
+              </span>
+            </Label>
+
             <Input
               placeholder="Bidding duration in days."
               value={bidDuration ? bidDuration : 0}
               onChange={(e) => setBidDuration(parseInt(e.target.value))}
               type="number"
+              min={1}
             />
           </>
         )}

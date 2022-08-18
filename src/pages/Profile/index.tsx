@@ -9,9 +9,7 @@ import CustomFormModal from "../../components/CustomFormModal";
 import { useWeb3React } from "@web3-react/core";
 import Button from "../../components/Button";
 import EditModal from "./components/EditModal";
-import { useTheme } from "@emotion/react";
 import Transparent from "../../assets/transparent.png";
-import { useMediaQuery } from "@mui/material";
 import UserDetailsSkeleton from "../../components/Skeletons/UserDetailsSkeleton";
 import PostSkeleton from "../../components/Skeletons/PostSkeleton";
 import { useNavigate } from "react-router-dom";
@@ -205,8 +203,6 @@ export default function LetterAvatars() {
   const [followStatus, setFollowStatus] = useState<boolean>(false);
   const [loadDataModalStatus, setLoadDataModalStatus] = useState(false);
 
-  const [likes, setLikes] = useState(0);
-
   const [address, setAddress] = useState("");
   const [user, setUser] = useState<any>(null);
 
@@ -215,9 +211,6 @@ export default function LetterAvatars() {
 
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const { account } = useWeb3React();
-  const theme = useTheme();
-  //@ts-ignore
-  const isMobile = useMediaQuery(theme?.breakpoints?.down("sm"));
   const navigate = useNavigate();
   const signature = useAppSelector((state) => state.userReducer.signature);
   const walletAddress = useAppSelector(
@@ -372,6 +365,7 @@ export default function LetterAvatars() {
   };
 
   useEffect(() => {
+    setFollowStatus(false);
     setAddress(window.location.href.split("/")[4].toLowerCase());
   }, [window.location.href]);
 
@@ -417,12 +411,9 @@ export default function LetterAvatars() {
   };
 
   const reloadData = async () => {
-    setLoadDataModalStatus(true);
-    setTimeout(() => {
-      let user_address = address;
-      setAddress("");
-      setAddress(user_address);
-    }, 20000);
+    let user_address = address;
+    setAddress("");
+    setAddress(user_address);
   };
 
   return (

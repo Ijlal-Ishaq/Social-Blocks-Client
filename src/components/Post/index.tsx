@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { useAppSelector } from "../../hooks";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { injected } from "../../utils/connector";
 
 const MainDiv = styled("div")(({ theme }) => ({
   width: "100%",

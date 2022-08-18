@@ -20,7 +20,6 @@ import ChangeStatusModal from "./ChangeStatusModal/index";
 import User from "../../components/User";
 import { useTheme } from "@emotion/react";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import { injected } from "../../utils/connector";
 import Ad from "../../components/Ad";
 import TopCreator from "../../components/TopCreators";
 import UpcomingFeatures from "../../components/UpcomingFeatures";
@@ -293,7 +292,7 @@ const PostDetail: FC = () => {
   );
 
   const navigate = useNavigate();
-  const { account, activate } = useWeb3React();
+  const { account } = useWeb3React();
   const web3Context = useWeb3React();
 
   const [likes, setLikes] = useState<any[]>([]);

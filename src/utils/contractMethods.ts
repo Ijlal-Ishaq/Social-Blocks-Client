@@ -34,6 +34,9 @@ export const createAccount = async (
       if (confirmationNumber === 0) {
         cb();
       }
+    })
+    .on("error", (error) => {
+      cb();
     });
 };
 
