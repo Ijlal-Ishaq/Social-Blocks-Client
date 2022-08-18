@@ -15,7 +15,7 @@ export default function TopCreator(props) {
 
   const fetchCreators = async () => {
     const result = await axios.get(
-      "http://localhost:5001/users/getRisingCreators"
+      "https://socialblocks.herokuapp.com/users/getRisingCreators"
     );
     setCreators(result?.data);
     setIsLoading(false);

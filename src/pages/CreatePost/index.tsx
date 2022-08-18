@@ -251,7 +251,7 @@ const Index: FC = () => {
             setLoading(false);
           })
           .on("confirmation", function (confirmationNumber) {
-            if (confirmationNumber === 1) {
+            if (confirmationNumber === 0) {
               navigate("/home");
             }
           });

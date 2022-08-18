@@ -244,6 +244,9 @@ export default function LetterAvatars() {
       if (response?.data) {
         console.log(response.data);
         setUserFollower(response.data.data);
+        if (response.data.data.includes(account?.toLowerCase())) {
+          setFollowStatus(true);
+        }
       }
     });
   };
@@ -382,12 +385,6 @@ export default function LetterAvatars() {
     }
   }, [address]);
 
-  useEffect(() => {
-    if (user?.followers?.includes(account?.toLowerCase())) {
-      setFollowStatus(true);
-    }
-  }, [user]);
-
   const follow = async () => {
     if (!account) {
       alert("Connect Wallet!");
@@ -412,6 +409,7 @@ export default function LetterAvatars() {
     setFollowStatus(false);
     await axios.post("https://socialblocks.herokuapp.com/users/unfollow", {
       userAddress: account?.toLowerCase(),
+      address: account?.toLowerCase(),
       followUser: user?.address,
       signature,
     });

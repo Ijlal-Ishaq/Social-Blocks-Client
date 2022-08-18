@@ -411,7 +411,7 @@ const PostDetail: FC = () => {
 
   const getBiddingDetails = async () => {
     const web3 = new Web3(
-      "https://rinkeby.infura.io/v3/7c4e9e4322bc446195e561d9ea27d827"
+      "https://polygon-mumbai.g.alchemy.com/v2/5MfjmScw7iPoX389ZCYuKOtgtsA1Eg4g"
     );
     const contract = new web3.eth.Contract(
       contractAbi as any,
@@ -462,7 +462,7 @@ const PostDetail: FC = () => {
         console.log("transaction hash: " + hash);
       })
       .on("confirmation", async function (confirmationNumber) {
-        if (confirmationNumber === 1) {
+        if (confirmationNumber === 0) {
           setBuyModalStatus(false);
           reloadData();
         }
@@ -506,7 +506,7 @@ const PostDetail: FC = () => {
           console.log("transaction hash: " + hash);
         })
         .on("confirmation", (confirmationNumber) => {
-          if (confirmationNumber === 1) {
+          if (confirmationNumber === 0) {
             console.log("confirmationNumber =", confirmationNumber);
             setClaimModalStatus(false);
             getClaimableAmount();
@@ -552,7 +552,7 @@ const PostDetail: FC = () => {
           console.log("transaction hash: " + hash);
         })
         .on("confirmation", (confirmationNumber) => {
-          if (confirmationNumber === 1) {
+          if (confirmationNumber === 0) {
             console.log("confirmationNumber =", confirmationNumber);
             setStatusModalStatus(false);
             reloadData();
@@ -601,7 +601,7 @@ const PostDetail: FC = () => {
           console.log("transaction hash: " + hash);
         })
         .on("confirmation", async function (confirmationNumber) {
-          if (confirmationNumber === 1) {
+          if (confirmationNumber === 0) {
             setBiddingModalStatus(false);
             reloadData();
           }
@@ -634,7 +634,7 @@ const PostDetail: FC = () => {
         console.log("transaction hash: " + hash);
       })
       .on("confirmation", async function (confirmationNumber) {
-        if (confirmationNumber === 1) {
+        if (confirmationNumber === 0) {
           setClaimingBidModalStatus(false);
           reloadData();
         }

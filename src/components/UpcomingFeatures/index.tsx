@@ -18,7 +18,7 @@ const Heading = styled("div")(({ theme }) => ({
 
 const ScrollContainer = styled("div")<{ height?: any }>(
   ({ theme, height }) => ({
-    height: height ? height - 25 : "0px",
+    height: height ? height - 20 : "0px",
     overflow: "auto",
     paddingRight: "9px",
 

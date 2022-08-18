@@ -31,7 +31,7 @@ export const createAccount = async (
       // console.log("hash 0", hash);
     })
     .on("confirmation", function (confirmationNumber, receipt) {
-      if (confirmationNumber === 1) {
+      if (confirmationNumber === 0) {
         cb();
       }
     });
@@ -94,7 +94,7 @@ export const updateAccount = async (
       // console.log("hash 0", hash);
     })
     .on("confirmation", function (confirmationNumber, receipt) {
-      if (confirmationNumber === 1) {
+      if (confirmationNumber === 0) {
         cb();
         // tx confirmed
         // console.log("tx confirmed");
