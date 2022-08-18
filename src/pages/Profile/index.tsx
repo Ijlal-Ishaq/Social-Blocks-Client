@@ -226,7 +226,7 @@ export default function LetterAvatars() {
 
   const getUserFollowing = async () => {
     await axios({
-      url: `http://localhost:5001/users/getFollowing/${address.toLowerCase()}`,
+      url: `https://socialblocks.herokuapp.com/users/getFollowing/${address.toLowerCase()}`,
       method: "get",
     }).then((response) => {
       if (response?.data) {
@@ -238,7 +238,7 @@ export default function LetterAvatars() {
 
   const getUserFollowers = async () => {
     await axios({
-      url: `http://localhost:5001/users/getFollowers/${address.toLowerCase()}`,
+      url: `https://socialblocks.herokuapp.com/users/getFollowers/${address.toLowerCase()}`,
       method: "get",
     }).then((response) => {
       if (response?.data) {
@@ -394,7 +394,7 @@ export default function LetterAvatars() {
       return;
     }
     setFollowStatus(true);
-    await axios.post("http://localhost:5001/users/follow", {
+    await axios.post("https://socialblocks.herokuapp.com/users/follow", {
       userAddress: account?.toLowerCase(),
       address: account?.toLowerCase(),
       followUser: user?.address,
@@ -410,7 +410,7 @@ export default function LetterAvatars() {
       return;
     }
     setFollowStatus(false);
-    await axios.post("http://localhost:5001/users/unfollow", {
+    await axios.post("https://socialblocks.herokuapp.com/users/unfollow", {
       userAddress: account?.toLowerCase(),
       followUser: user?.address,
       signature,

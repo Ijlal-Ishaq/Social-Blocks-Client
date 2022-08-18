@@ -75,7 +75,7 @@ export default function Home() {
   const getAllUsers = async () => {
     setLoading(true);
     let res = await axios({
-      url: `http://localhost:5001/users/getFollowing/${address.toLowerCase()}`,
+      url: `https://socialblocks.herokuapp.com/users/getFollowing/${address.toLowerCase()}`,
       method: "get",
     });
 

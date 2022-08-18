@@ -152,7 +152,7 @@ const Post: React.FC<Props> = (props) => {
     setLikeStatus(true);
     setPostLikes(postLikes + 1);
 
-    await axios.post("http://localhost:5001/likes/setLikes", {
+    await axios.post("https://socialblocks.herokuapp.com/likes/setLikes", {
       postId: props.post.id,
       postUserAddress: props.post.owner.id,
       userAddress: account,

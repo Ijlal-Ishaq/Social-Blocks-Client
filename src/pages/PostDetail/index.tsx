@@ -355,14 +355,17 @@ const PostDetail: FC = () => {
       }
 
       const transferResult = await axios.get(
-        "http://localhost:5001/posts/getTransferHistory/" + postId
+        "https://socialblocks.herokuapp.com/posts/getTransferHistory/" + postId
       );
 
       setTransferHistory(transferResult?.data?.usersInOrder);
 
-      const likes = await axios.post("http://localhost:5001/likes/getlikes/", {
-        postId,
-      });
+      const likes = await axios.post(
+        "https://socialblocks.herokuapp.com/likes/getlikes/",
+        {
+          postId,
+        }
+      );
 
       setLikes(likes?.data.likesArray);
 
@@ -380,7 +383,7 @@ const PostDetail: FC = () => {
     if (commentText !== "") {
       setCommentingModalStatus(true);
       let result = await axios.post(
-        "http://localhost:5001/comment/setcomment",
+        "https://socialblocks.herokuapp.com/comment/setcomment",
         {
           postId: parseInt(postId),
           comment: commentText,
@@ -397,7 +400,7 @@ const PostDetail: FC = () => {
   const getComments = async () => {
     if (postId !== "") {
       const result = await axios.get(
-        "http://localhost:5001/comment/getcomments/" + postId
+        "https://socialblocks.herokuapp.com/comment/getcomments/" + postId
       );
       setComments(result?.data?.comments);
       if (result?.data?.comments?.length == 0) {
