@@ -287,9 +287,6 @@ const PostDetail: FC = () => {
 
   const [commentText, setCommentText] = useState<string>("");
   const signature = useAppSelector((state) => state.userReducer.signature);
-  const walletAddress = useAppSelector(
-    (state) => state.userReducer.walletAddress
-  );
 
   const navigate = useNavigate();
   const { account } = useWeb3React();
@@ -480,22 +477,25 @@ const PostDetail: FC = () => {
         CONTRACT_ADDRESS
       );
 
-      const { data } = await axios.post(
+      const data = await axios.post(
         "https://socialblocks.herokuapp.com/likes/getLikesHash",
         {
           signature,
-          userAddress: walletAddress,
+          userAddress: account,
           likes: likes.length,
           postId: postId,
         }
       );
 
-      console.log("data =", data);
-
       await contract.methods
-        .claimPostReward(parseInt(data.postId), data.likesCount, data.signature)
+        //@ts-ignore
+        .claimPostReward(
+          data.data.postId,
+          data.data.likesCount,
+          data.data.signature
+        )
         .send({
-          from: walletAddress,
+          from: account,
         })
         .on("transactionHash", (hash) => {
           console.log("transaction hash: " + hash);
@@ -508,6 +508,7 @@ const PostDetail: FC = () => {
           }
         })
         .on("error", async function (error) {
+          console.log(error);
           setClaimModalStatus(false);
         });
     } catch (error) {
@@ -562,7 +563,7 @@ const PostDetail: FC = () => {
 
   const getClaimableAmount = async () => {
     const web3 = new Web3(
-      "https://rinkeby.infura.io/v3/7c4e9e4322bc446195e561d9ea27d827"
+      "https://polygon-mumbai.g.alchemy.com/v2/5MfjmScw7iPoX389ZCYuKOtgtsA1Eg4g"
     );
     const contract = new web3.eth.Contract(
       contractAbi as any,
