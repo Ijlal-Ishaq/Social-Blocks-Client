@@ -87,7 +87,7 @@ export default function Home() {
       });
 
       const result = await axios.post(
-        "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+        "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
         {
           query: `
           {
@@ -114,7 +114,7 @@ export default function Home() {
 
   const getUserDetails = async () => {
     const result = await axios.post(
-      "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+      "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
       {
         query: `
       {

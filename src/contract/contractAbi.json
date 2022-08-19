@@ -355,6 +355,13 @@
   },
   {
     "inputs": [],
+    "name": "_claimId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "admin",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
@@ -598,6 +605,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "maxTokenId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "uint8", "name": "_buyStatus", "type": "uint8" },
       { "internalType": "uint256", "name": "_sellValue", "type": "uint256" },
@@ -650,6 +664,13 @@
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "rewardClaimed",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardFactor",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"

@@ -311,7 +311,7 @@ const PostDetail: FC = () => {
   const getPostDetails = async () => {
     if (postId !== "") {
       const result = await axios.post(
-        "https://api.thegraph.com/subgraphs/id/Qmdh7znoyB7zeu5qbQMyr8dxGFrjJBWXP35hC6JTYQdfKN",
+        "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
         {
           query: `
           {
@@ -486,18 +486,14 @@ const PostDetail: FC = () => {
           signature,
           userAddress: walletAddress,
           likes: likes.length,
+          postId: postId,
         }
       );
 
       console.log("data =", data);
 
       await contract.methods
-        .claimPostReward(
-          parseInt(postId),
-          likes.length,
-          data.signedObject.signature,
-          data.signedObject.messageHash
-        )
+        .claimPostReward(parseInt(data.postId), data.likesCount, data.signature)
         .send({
           from: walletAddress,
         })
