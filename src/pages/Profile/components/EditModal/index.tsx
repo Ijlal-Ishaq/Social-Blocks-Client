@@ -172,7 +172,7 @@ const Index: FC<Prop> = (props) => {
       >
         <FieldFileInput
           onFileSelect={setSelectedFile}
-          previewImage={image}
+          previewImage={"https://benjaminkor2.infura-ipfs.io/ipfs/" + image}
           circleShape={true}
         />
       </div>

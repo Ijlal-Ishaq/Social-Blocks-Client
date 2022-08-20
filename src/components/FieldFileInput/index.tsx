@@ -95,7 +95,7 @@ const FieldFileInput: React.FC<Props> = (props) => {
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 borderRadius: props.circleShape ? "100%" : "3px",
-                objectFit: "contain",
+                objectFit: "cover",
               }}
               src={previewImage}
             />
