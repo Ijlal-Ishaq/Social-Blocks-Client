@@ -56,19 +56,19 @@ export default function UpcomingFeatures(props) {
         <Feature
           title={"ContentTypes"}
           description={
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
+            "We are planning to add multiple content types like text, short videos and music to target most art forms."
           }
         />
         <Feature
           title={"SuperMails"}
           description={
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
+            "These are special mails that an individual can send to his/her favorite creator, it is like fan mail in the real world."
           }
         />
         <Feature
           title={"SuperBadges"}
           description={
-            "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
+            "These are special kinds of digital badges that a creator can create and assign to one of their follower. These badges will have numerous utilities."
           }
         />
       </ScrollContainer>
