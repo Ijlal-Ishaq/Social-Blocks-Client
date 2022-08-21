@@ -42,9 +42,9 @@ export default function Ad(props) {
     >
       <Heading>Advertisement</Heading>
       <SubHeading>
-        These will be community approved ads. The reveneu generated through
+        These will be community approved ads. The revenue generated through
         these ads will be distributed between the Creators, DAO voters and will
-        be used to pump the token price which will benifit the token holders /
+        be used to pump the token price which will benefit the token holders /
         community.
       </SubHeading>
     </div>
