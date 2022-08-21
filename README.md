@@ -4,7 +4,7 @@
 
 Medium Articles: https://medium.com/@socialblocks/the-worlds-first-community-driven-creator-oriented-social-media-platform-c9e27e6c6291
 
-Other Reops:
+Other Repos:
 
 -Contract: https://github.com/Ijlal-Ishaq/Social-Blocks-Server
 
