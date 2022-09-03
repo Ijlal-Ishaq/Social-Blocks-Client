@@ -131,6 +131,7 @@ const Post: React.FC<Props> = (props) => {
   const [postLikes, setPostLikes] = React.useState<any>(
     props.post.likesArray?.length
   );
+  const [copyOf, setCopyOf] = React.useState<any>(0);
   const { account } = useWeb3React();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -159,8 +160,18 @@ const Post: React.FC<Props> = (props) => {
     });
   };
 
+  const getCopyOf = async () => {
+    const postId = props?.post?.id;
+    const res = await axios.get(
+      "https://socialblocks.herokuapp.com/posts/getCopies/" + postId
+    );
+    if (res?.data?.copyOf) {
+      setCopyOf(res.data.copyOf);
+    }
+  };
+
   useEffect(() => {
-    console.log(props.post);
+    getCopyOf();
   }, []);
 
   if (!props.post.owner?.id) return null;
@@ -229,6 +240,39 @@ const Post: React.FC<Props> = (props) => {
               @{props.post.creator.userName}
             </span>
             &nbsp;
+          </div>
+        ) : null}
+
+        {copyOf != 0 ? (
+          <div
+            style={{
+              position: "absolute",
+              top: "7px",
+              left: "7px",
+              padding: "5px 10px",
+              borderRadius: "7px",
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "rgb(0 0 0 / 20%) 0px 0px 1rem 0px",
+              backdropFilter: "blur(10px)",
+              height: "35px",
+            }}
+            onClick={() => navigate(`/post/${copyOf}`)}
+          >
+            <span
+              style={{
+                //@ts-ignore
+                color: theme.palette.primary.main,
+                opacity: "1",
+                fontSize: "15px",
+                lineHeight: "10px",
+                fontWeight: "1000",
+              }}
+            >
+              *COPY* <span style={{ fontWeight: "500" }}>of Post#{copyOf}</span>
+            </span>
           </div>
         ) : null}
 
