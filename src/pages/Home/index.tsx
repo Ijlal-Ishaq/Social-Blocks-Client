@@ -1,105 +1,106 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { alpha, styled } from "@mui/material";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { alpha, styled } from '@mui/material';
 
-import Post, { SinglePost } from "../../components/Post/index";
-import Header from "../../components/Header/index";
-import FloatingActionButton from "../../components/FloatingActionButton";
-import SearchButton from "../../components/SearchButton";
-import Ad from "../../components/Ad";
-import TopCreator from "../../components/TopCreators";
-import UpcomingFeatures from "../../components/UpcomingFeatures";
+import Post, { SinglePost } from '../../components/Post/index';
+import Header from '../../components/Header/index';
+import FloatingActionButton from '../../components/FloatingActionButton';
+import SearchButton from '../../components/SearchButton';
+import Ad from '../../components/Ad';
+import TopCreator from '../../components/TopCreators';
+import UpcomingFeatures from '../../components/UpcomingFeatures';
 
-import { useAppSelector } from "../../hooks";
-import PostSkeleton from "../../components/Skeletons/PostSkeleton";
-import { useWeb3React } from "@web3-react/core";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useAppSelector } from '../../hooks';
+import PostSkeleton from '../../components/Skeletons/PostSkeleton';
+import { useWeb3React } from '@web3-react/core';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { SERVER_URL } from '../../utils/constants';
 
-const Body = styled("div")(({ theme }) => ({
-  width: "100vw",
-  maxHeight: "100vh",
-  overflowY: "auto",
+const Body = styled('div')(({ theme }) => ({
+  width: '100vw',
+  maxHeight: '100vh',
+  overflowY: 'auto',
 
-  "::-webkit-scrollbar": {
-    width: "13px",
+  '::-webkit-scrollbar': {
+    width: '13px',
     background: alpha(theme.palette.primary.main, 0.1),
   },
 
-  "::-webkit-scrollbar-thumb": {
-    borderRadius: "3px",
+  '::-webkit-scrollbar-thumb': {
+    borderRadius: '3px',
     background: theme.palette.primary.main,
-    height: "150px",
+    height: '150px',
   },
 
-  [theme.breakpoints.down("sm")]: {
-    "::-webkit-scrollbar": {
-      width: "13px",
+  [theme.breakpoints.down('sm')]: {
+    '::-webkit-scrollbar': {
+      width: '13px',
       background: alpha(theme.palette.primary.main, 0.1),
-      display: "none",
+      display: 'none',
     },
   },
 }));
 
-const MainDiv = styled("div")(({ theme }) => ({
-  width: "450px",
-  padding: "75px 0px",
-  margin: "auto",
+const MainDiv = styled('div')(({ theme }) => ({
+  width: '450px',
+  padding: '75px 0px',
+  margin: 'auto',
 
-  [theme.breakpoints.down("sm")]: {
-    width: "100%",
-    padding: "75px 10px",
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    padding: '75px 10px',
   },
 }));
 
-const AdDiv = styled("div")(({ theme }) => ({
-  position: "fixed",
-  top: "65px",
-  left: "0",
-  height: "calc(100vh - 65px)",
-  width: "calc(50vw - 233px)",
+const AdDiv = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  top: '65px',
+  left: '0',
+  height: 'calc(100vh - 65px)',
+  width: 'calc(50vw - 233px)',
 
-  display: "flex",
-  flexDirection: "column",
+  display: 'flex',
+  flexDirection: 'column',
 
-  padding: "30px 70px",
+  padding: '30px 70px',
 
-  [theme.breakpoints.down("md")]: {
-    padding: "30px 20px",
+  [theme.breakpoints.down('md')]: {
+    padding: '30px 20px',
   },
 
-  [theme.breakpoints.down("smd")]: {
-    display: "none",
-  },
-}));
-
-const SuggestionsDiv = styled("div")(({ theme }) => ({
-  position: "fixed",
-  top: "65px",
-  right: "14px",
-  height: "calc(100vh - 65px)",
-  width: "calc(50vw - 235px)",
-
-  display: "flex",
-  flexDirection: "column",
-
-  padding: "20px 70px",
-
-  [theme.breakpoints.down("md")]: {
-    padding: "20px 20px",
-  },
-
-  [theme.breakpoints.down("smd")]: {
-    display: "none",
+  [theme.breakpoints.down('smd')]: {
+    display: 'none',
   },
 }));
 
-const Heading = styled("div")(({ theme }) => ({
-  fontSize: "20px",
-  fontWeight: "500",
+const SuggestionsDiv = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  top: '65px',
+  right: '14px',
+  height: 'calc(100vh - 65px)',
+  width: 'calc(50vw - 235px)',
+
+  display: 'flex',
+  flexDirection: 'column',
+
+  padding: '20px 70px',
+
+  [theme.breakpoints.down('md')]: {
+    padding: '20px 20px',
+  },
+
+  [theme.breakpoints.down('smd')]: {
+    display: 'none',
+  },
+}));
+
+const Heading = styled('div')(({ theme }) => ({
+  fontSize: '20px',
+  fontWeight: '500',
   color: theme.palette.text.primary,
-  textAlign: "center",
+  textAlign: 'center',
 }));
 
 const getSkeleton = () => {
@@ -123,13 +124,13 @@ export default function Home() {
   const dispatch = useDispatch();
 
   const changesModalVisible = useAppSelector(
-    (state) => state.userReducer.changesModalVisible
+    state => state.userReducer.changesModalVisible,
   );
 
   const getFollowings = async () => {
     let response = await axios({
-      url: `https://socialblocks.herokuapp.com/users/getFollowing/${account?.toLowerCase()}`,
-      method: "get",
+      url: `${SERVER_URL}/users/getFollowing/${account?.toLowerCase()}`,
+      method: 'get',
     });
     if (response?.data) {
       return response?.data?.data;
@@ -138,17 +139,17 @@ export default function Home() {
     }
   };
 
-  const getFollowingsPosts = async (following) => {
-    let addressesString = "";
+  const getFollowingsPosts = async following => {
+    let addressesString = '';
 
-    following.forEach((e) => {
+    following.forEach(e => {
       addressesString += '"' + e.toString() + '",';
     });
 
     addressesString += '"' + account?.toLowerCase() + '",';
 
     const result = await axios.post(
-      "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
+      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
       {
         query: `
         {
@@ -183,7 +184,7 @@ export default function Home() {
           }
         }
       `,
-      }
+      },
     );
 
     if (result.data?.data?.posts) {
@@ -196,7 +197,7 @@ export default function Home() {
   const getAllPosts = async () => {
     setLoading(true);
     const result = await axios.post(
-      "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
+      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
       {
         query: `
         {
@@ -231,7 +232,7 @@ export default function Home() {
           }
         }
       `,
-      }
+      },
     );
 
     if (result.data?.data?.posts) {
@@ -246,7 +247,7 @@ export default function Home() {
     let posts = await getFollowingsPosts(following);
 
     setPosts(posts);
-    dispatch({ type: "SET_CHANGES_MODAL_VISIBLE", payload: false });
+    dispatch({ type: 'SET_CHANGES_MODAL_VISIBLE', payload: false });
     setLoading(false);
   };
 
@@ -260,7 +261,7 @@ export default function Home() {
 
   useEffect(() => {
     if (fetchData) {
-      console.log("fetching data again");
+      console.log('fetching data again');
 
       getPosts();
 
@@ -270,7 +271,7 @@ export default function Home() {
 
   useEffect(() => {
     if (changesModalVisible) {
-      console.log("timeout set");
+      console.log('timeout set');
 
       setTimeout(() => {
         setFetchData(true);
@@ -287,20 +288,18 @@ export default function Home() {
         ) : posts.length === 0 ? (
           <Heading
             style={{
-              marginTop: "30px",
-              fontWeight: "400",
-              fontSize: "25px",
-            }}
-          >
+              marginTop: '30px',
+              fontWeight: '400',
+              fontSize: '25px',
+            }}>
             <br />
             Your feed is empty!
             <br />
             <span
-              style={{ fontWeight: "700", cursor: "pointer" }}
+              style={{ fontWeight: '700', cursor: 'pointer' }}
               onClick={() => {
-                navigate("/search");
-              }}
-            >
+                navigate('/search');
+              }}>
               Search &#38; Follow
             </span>
             <br />

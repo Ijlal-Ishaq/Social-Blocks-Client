@@ -1,12 +1,13 @@
-import { styled } from "@mui/material";
-import { useEffect, useState } from "react";
-import MiniProfile from "../MiniProfile";
-import MiniProfileSkeleton from "../Skeletons/MiniProfileSkeleton";
-import axios from "axios";
+import { styled } from '@mui/material';
+import { useEffect, useState } from 'react';
+import MiniProfile from '../MiniProfile';
+import MiniProfileSkeleton from '../Skeletons/MiniProfileSkeleton';
+import axios from 'axios';
+import { SERVER_URL } from '../../utils/constants';
 
-const Heading = styled("div")(({ theme }) => ({
-  fontSize: "20px",
-  fontWeight: "700",
+const Heading = styled('div')(({ theme }) => ({
+  fontSize: '20px',
+  fontWeight: '700',
 }));
 
 export default function TopCreator(props) {
@@ -14,9 +15,7 @@ export default function TopCreator(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchCreators = async () => {
-    const result = await axios.get(
-      "https://socialblocks.herokuapp.com/users/getRisingCreators"
-    );
+    const result = await axios.get(`${SERVER_URL}/users/getRisingCreators`);
     setCreators(result?.data);
     setIsLoading(false);
   };
@@ -28,9 +27,8 @@ export default function TopCreator(props) {
   return (
     <div
       style={{
-        width: "100%",
-      }}
-    >
+        width: '100%',
+      }}>
       <Heading>Rising Creators</Heading>
 
       {isLoading ? (
@@ -42,12 +40,12 @@ export default function TopCreator(props) {
         </>
       ) : (
         //@ts-ignore
-        creators.map((e) => {
+        creators.map(e => {
           return (
             <MiniProfile
               userName={e.userName}
               address={e.address}
-              image={"https://benjaminkor2.infura-ipfs.io/ipfs/" + e.image}
+              image={'https://benjaminkor2.infura-ipfs.io/ipfs/' + e.image}
             />
           );
         })

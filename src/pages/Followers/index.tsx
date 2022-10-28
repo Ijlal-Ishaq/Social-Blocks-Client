@@ -1,56 +1,57 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { alpha, styled } from "@mui/material";
-import Header from "../../components/Header/index";
-import ProfileSkeleton from "../../components/Skeletons/ProfileSkeleton";
-import Profile from "../../components/Profile";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { alpha, styled } from '@mui/material';
+import Header from '../../components/Header/index';
+import ProfileSkeleton from '../../components/Skeletons/ProfileSkeleton';
+import Profile from '../../components/Profile';
+import { SERVER_URL } from '../../utils/constants';
 
-const Body = styled("div")(({ theme }) => ({
-  width: "100vw",
-  maxHeight: "100vh",
-  overflowY: "auto",
+const Body = styled('div')(({ theme }) => ({
+  width: '100vw',
+  maxHeight: '100vh',
+  overflowY: 'auto',
 
-  "::-webkit-scrollbar": {
-    width: "13px",
+  '::-webkit-scrollbar': {
+    width: '13px',
     background: alpha(theme.palette.primary.main, 0.1),
   },
 
-  "::-webkit-scrollbar-thumb": {
-    borderRadius: "3px",
+  '::-webkit-scrollbar-thumb': {
+    borderRadius: '3px',
     background: theme.palette.primary.main,
-    height: "150px",
+    height: '150px',
   },
 
-  [theme.breakpoints.down("sm")]: {
-    "::-webkit-scrollbar": {
-      width: "13px",
+  [theme.breakpoints.down('sm')]: {
+    '::-webkit-scrollbar': {
+      width: '13px',
       background: alpha(theme.palette.primary.main, 0.1),
-      display: "none",
+      display: 'none',
     },
   },
 }));
 
-const MainDiv = styled("div")(({ theme }) => ({
-  width: "450px",
-  marginLeft: "auto",
-  marginRight: "auto",
-  padding: "100px 0px",
-  paddingTop: "50px",
+const MainDiv = styled('div')(({ theme }) => ({
+  width: '450px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  padding: '100px 0px',
+  paddingTop: '50px',
 
-  [theme.breakpoints.down("sm")]: {
-    width: "100%",
-    padding: "90px 10px",
-    paddingTop: "50px",
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    padding: '90px 10px',
+    paddingTop: '50px',
   },
 }));
 
-const Heading = styled("div")(({ theme }) => ({
-  fontSize: "20px",
-  fontWeight: "500",
+const Heading = styled('div')(({ theme }) => ({
+  fontSize: '20px',
+  fontWeight: '500',
   color: theme.palette.text.primary,
-  textAlign: "center",
+  textAlign: 'center',
 }));
 
 const getSkeleton = () => {
@@ -66,28 +67,28 @@ const getSkeleton = () => {
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [allUsers, setAllUsers] = useState<any[]>([]);
   let [searchedUsers, setSearchedUsers] = useState<any[]>([]);
-  const [address, setAddress] = useState<any>("");
+  const [address, setAddress] = useState<any>('');
   const [user, setUser] = useState<any>();
 
   const getAllUsers = async () => {
     setLoading(true);
     let res = await axios({
-      url: `https://socialblocks.herokuapp.com/users/getFollowers/${address.toLowerCase()}`,
-      method: "get",
+      url: `${SERVER_URL}/users/getFollowers/${address.toLowerCase()}`,
+      method: 'get',
     });
 
     if (res?.data) {
-      let addressesString = "";
+      let addressesString = '';
 
-      res.data.data.forEach((e) => {
+      res.data.data.forEach(e => {
         addressesString += '"' + e.toString() + '",';
       });
 
       const result = await axios.post(
-        "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
+        'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
         {
           query: `
           {
@@ -104,7 +105,7 @@ export default function Home() {
           }
           
         `,
-        }
+        },
       );
 
       setAllUsers(result.data?.data?.users);
@@ -114,7 +115,7 @@ export default function Home() {
 
   const getUserDetails = async () => {
     const result = await axios.post(
-      "https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone",
+      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
       {
         query: `
       {
@@ -130,7 +131,7 @@ export default function Home() {
         }
       }
       `,
-      }
+      },
     );
 
     if (result.data?.data?.user) {
@@ -139,11 +140,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setAddress(window.location.href.split("/")[4]);
+    setAddress(window.location.href.split('/')[4]);
   }, []);
 
   useEffect(() => {
-    if (address !== "") {
+    if (address !== '') {
       getUserDetails();
       getAllUsers();
     }
@@ -153,7 +154,7 @@ export default function Home() {
     setLoading(true);
     let users: any[] = [];
     setSearchedUsers([...users]);
-    allUsers.forEach((e) => {
+    allUsers.forEach(e => {
       if (
         e.displayName.toLowerCase().includes(searchValue.toLowerCase()) ||
         e.userName.toLowerCase().includes(searchValue.toLowerCase())
@@ -175,13 +176,13 @@ export default function Home() {
         followPage={true}
       />
       <MainDiv>
-        <Heading style={{ marginTop: "30px" }}>
-          {user ? "@" + user?.userName + "'s followers" : "Loading..."}
+        <Heading style={{ marginTop: '30px' }}>
+          {user ? '@' + user?.userName + "'s followers" : 'Loading...'}
         </Heading>
         {loading ? (
           getSkeleton()
         ) : searchedUsers?.length === 0 ? (
-          <Heading style={{ marginTop: "30px" }}>No User Found.</Heading>
+          <Heading style={{ marginTop: '30px' }}>No User Found.</Heading>
         ) : (
           <>
             {searchedUsers?.map((item, i) => (

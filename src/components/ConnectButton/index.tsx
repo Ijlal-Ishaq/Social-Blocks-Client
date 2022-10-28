@@ -1,14 +1,15 @@
-import * as React from "react";
-import Button from "../Button/index";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useWeb3React } from "@web3-react/core";
-import { useNavigate } from "react-router-dom";
-import { conciseWalletAddress } from "../../utils/formattingFunctions";
-import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import LogoutIcon from "@mui/icons-material/Logout";
+import * as React from 'react';
+import Button from '../Button/index';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useWeb3React } from '@web3-react/core';
+import { useNavigate } from 'react-router-dom';
+import { conciseWalletAddress } from '../../utils/formattingFunctions';
+import { useTheme } from '@emotion/react';
+import { useMediaQuery } from '@mui/material';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { chainChangeRequest } from '../../utils';
 
 type Props = {
   connectMetamask: () => any;
@@ -24,13 +25,16 @@ export default function ConnectButton(props: Props) {
 
   const theme = useTheme();
   //@ts-ignore
-  const isMobile = useMediaQuery(theme?.breakpoints?.down("sm"));
+  const isMobile = useMediaQuery(theme?.breakpoints?.down('sm'));
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('called');
+
     if (active && account) {
       setAnchorEl(event.currentTarget);
     } else {
-      props.connectMetamask();
+      // props.connectMetamask();
+      chainChangeRequest('0x13881', props.connectMetamask);
     }
   };
 
@@ -39,18 +43,17 @@ export default function ConnectButton(props: Props) {
   };
 
   return (
-    <div style={{ width: "fit-content" }}>
+    <div style={{ width: 'fit-content' }}>
       <Button
         onClick={handleClick}
-        style={{ margin: "0px" }}
+        style={{ margin: '0px' }}
         //@ts-ignore
-        ref={btnRef}
-      >
+        ref={btnRef}>
         {active && account
           ? conciseWalletAddress(account)
           : isMobile
-          ? "Connect"
-          : "Connect Wallet"}
+          ? 'Connect'
+          : 'Connect Wallet'}
       </Button>
       <Menu
         id="basic-menu"
@@ -58,21 +61,19 @@ export default function ConnectButton(props: Props) {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
+          'aria-labelledby': 'basic-button',
+        }}>
         <MenuItem
           onClick={() => {
             navigate(`/profile/${account}`);
           }}
           sx={{
-            fontSize: "17px",
+            fontSize: '17px',
             //@ts-ignore
             width: btnRef?.current?.offsetWidth,
-            fontFamily: "Poppins",
-          }}
-        >
-          <AccountBoxIcon style={{ height: "20px" }} />
+            fontFamily: 'Poppins',
+          }}>
+          <AccountBoxIcon style={{ height: '20px' }} />
           &nbsp; Profile
         </MenuItem>
         {/* <MenuItem onClick={handleClose}>Change Wallet</MenuItem> */}
@@ -81,9 +82,8 @@ export default function ConnectButton(props: Props) {
             deactivate();
             navigate(`/home`);
           }}
-          sx={{ fontSize: "17px", fontFamily: "Poppins" }}
-        >
-          <LogoutIcon style={{ height: "20px" }} />
+          sx={{ fontSize: '17px', fontFamily: 'Poppins' }}>
+          <LogoutIcon style={{ height: '20px' }} />
           &nbsp; Disconnet
         </MenuItem>
       </Menu>
