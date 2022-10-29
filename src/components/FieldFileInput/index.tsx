@@ -43,7 +43,13 @@ const FieldFileInput: React.FC<Props> = props => {
 
   const onChange = (e: any) => {
     if ((e.target as HTMLInputElement).files && e.target.files[0]) {
+      if (e.target.files[0].size / 1_000_000 > 5) {
+        alert('media file size exceeded. File should not exceed 5mb size.');
+        return;
+      }
+
       props.onFileSelect(e.target.files[0]);
+
       if (e.target.files[0].type.includes('image')) {
         setMediaType('image');
 
@@ -77,7 +83,7 @@ const FieldFileInput: React.FC<Props> = props => {
       <input
         id="file"
         onClick={e => e.stopPropagation()}
-        accept=".jpg, .png, .jpeg .mp4 .mkv"
+        accept=".jpg, .png, .jpeg, .mp4, .mkv"
         onChange={onChange}
         type="file"
       />

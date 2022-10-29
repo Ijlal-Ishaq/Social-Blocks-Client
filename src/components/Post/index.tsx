@@ -130,7 +130,7 @@ export interface SinglePost {
 
 const Post: React.FC<Props> = props => {
   const [likeStatus, setLikeStatus] = React.useState(false);
-  const [postType, setPostType] = React.useState('image');
+  const [postType, setPostType] = React.useState(null);
   const [postLikes, setPostLikes] = React.useState<any>(
     props.post.likesArray?.length,
   );
@@ -177,17 +177,17 @@ const Post: React.FC<Props> = props => {
     });
   };
 
-  // const getCopyOf = async () => {
-  //   const postId = props?.post?.id;
-  //   const res = await axios.get(`${SERVER_URL}/posts/getCopies/` + postId);
-  //   if (res?.data?.copyOf) {
-  //     setCopyOf(res.data.copyOf);
-  //   }
-  // };
+  const getCopyOf = async () => {
+    const postId = props?.post?.id;
+    const res = await axios.get(`${SERVER_URL}/posts/getCopies/` + postId);
+    if (res?.data?.copyOf) {
+      setCopyOf(res.data.copyOf);
+    }
+  };
 
-  // useEffect(() => {
-  //   getCopyOf();
-  // }, []);
+  useEffect(() => {
+    postType === 'image' && getCopyOf();
+  }, [postType]);
 
   if (!props.post.owner?.id) return null;
 
@@ -233,7 +233,7 @@ const Post: React.FC<Props> = props => {
             width={'100%'}
             height={'fit-content'}
             controls={true}
-            style={{ margin: 'auto' }}
+            style={{ margin: 'auto', cursor: 'pointer' }}
           />
         )}
         {props.post.owner.id !== props.post.creator.id ? (

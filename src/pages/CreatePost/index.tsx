@@ -278,7 +278,16 @@ const Index: FC = () => {
     <Body>
       <MainDiv>
         <Heading>Create Post</Heading>
-        <Label>Content :</Label>
+        <Label>
+          Content :
+          <span style={{ fontSize: '10px' }}>
+            <span
+              style={{ color: theme.palette.primary.main, fontSize: '13px' }}>
+              *
+            </span>
+            (media should not exceed 5mb size.)
+          </span>
+        </Label>
         <div style={{ height: 'fit-content' }}>
           <FieldFileInput onFileSelect={setSelectedFile} />
         </div>

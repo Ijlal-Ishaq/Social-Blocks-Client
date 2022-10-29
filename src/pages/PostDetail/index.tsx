@@ -693,7 +693,7 @@ const PostDetail: FC = () => {
                 width={'100%'}
                 height={'fit-content'}
                 controls={true}
-                style={{ margin: 'auto' }}
+                style={{ margin: 'auto', cursor: 'pointer' }}
               />
             )}
             <Heading style={{ marginTop: '10px', fontWeight: '700' }}>
