@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { styled, alpha } from '@mui/material';
 import { useTheme } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -11,6 +11,7 @@ import { useAppSelector } from '../../hooks';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReactPlayer from 'react-player';
 import { SERVER_URL } from '../../utils/constants';
+import { useIsInViewport } from '../../hooks/useIsInViewport';
 
 const MainDiv = styled('div')(({ theme }) => ({
   width: '100%',
@@ -139,6 +140,8 @@ const Post: React.FC<Props> = props => {
   const theme = useTheme();
   const navigate = useNavigate();
   const signature = useAppSelector(state => state.userReducer.signature);
+  const postRef = useRef(null);
+  const inViewPort = useIsInViewport(postRef);
 
   useEffect(() => {
     if (account && props.post?.likesArray?.includes(account)) {
@@ -192,7 +195,7 @@ const Post: React.FC<Props> = props => {
   if (!props.post.owner?.id) return null;
 
   return (
-    <MainDiv>
+    <MainDiv ref={postRef}>
       <PostHeader>
         <PostPicture
           onClick={() => navigate(`/profile/${props.post.owner.id}`)}
@@ -234,6 +237,7 @@ const Post: React.FC<Props> = props => {
             height={'fit-content'}
             controls={true}
             style={{ margin: 'auto', cursor: 'pointer' }}
+            playing={inViewPort}
           />
         )}
         {props.post.owner.id !== props.post.creator.id ? (

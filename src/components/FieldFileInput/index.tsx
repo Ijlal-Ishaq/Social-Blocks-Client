@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 
 const ImportImage = styled('div')<{ withBorder: boolean; circleShape }>(
-  ({ theme, withBorder, circleShape }) => ({
+  ({ theme, circleShape }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
