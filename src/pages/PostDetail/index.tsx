@@ -24,6 +24,7 @@ import Ad from '../../components/Ad';
 import TopCreator from '../../components/TopCreators';
 import UpcomingFeatures from '../../components/UpcomingFeatures';
 import { SERVER_URL } from '../../utils/constants';
+import ReactPlayer from 'react-player';
 
 const Body = styled('div')(({ theme }) => ({
   width: '100vw',
@@ -294,6 +295,7 @@ const PostDetail: FC = () => {
   const web3Context = useWeb3React();
 
   const [likes, setLikes] = useState<any[]>([]);
+  const [postMediaType, setPostMediaType] = useState<string>('image');
   const [biddingTimestamp, setBiddingTimestamp] = useState<any>();
   const [biddingDate, setBiddingDate] = useState<Date>();
   const [biddingPrice, setBiddingPrice] = useState<any>('---');
@@ -357,11 +359,17 @@ const PostDetail: FC = () => {
 
       setTransferHistory(transferResult?.data?.usersInOrder);
 
-      const likes = await axios.post(`${SERVER_URL}/likes/getlikes/`, {
-        postId,
-      });
+      const [type, likes] = await Promise.all([
+        axios.post(`${SERVER_URL}/type/getType/`, {
+          postId,
+        }),
+        axios.post(`${SERVER_URL}/likes/getlikes/`, {
+          postId,
+        }),
+      ]);
 
       setLikes(likes?.data.likesArray);
+      setPostMediaType(type.data.type);
 
       // setLikes(result?.data?.likesArray);
       setLoadDataModalStatus(false);
@@ -669,12 +677,25 @@ const PostDetail: FC = () => {
               }}>
               PostId#{postId}
             </Heading>
-            <PostContent
-              src={
-                'https://benjaminkor2.infura-ipfs.io/ipfs/' +
-                JSON.parse(postDetails?.metaData).image
-              }
-            />
+            {postMediaType === 'image' ? (
+              <PostContent
+                src={
+                  'https://benjaminkor2.infura-ipfs.io/ipfs/' +
+                  JSON.parse(postDetails?.metaData).image
+                }
+              />
+            ) : (
+              <ReactPlayer
+                url={
+                  'https://benjaminkor2.infura-ipfs.io/ipfs/' +
+                  JSON.parse(postDetails?.metaData).image
+                }
+                width={'100%'}
+                height={'fit-content'}
+                controls={true}
+                style={{ margin: 'auto' }}
+              />
+            )}
             <Heading style={{ marginTop: '10px', fontWeight: '700' }}>
               {JSON.parse(postDetails?.metaData).name}
             </Heading>
