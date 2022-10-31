@@ -195,7 +195,7 @@ const Post: React.FC<Props> = props => {
   if (!props.post.owner?.id) return null;
 
   return (
-    <MainDiv ref={postRef}>
+    <MainDiv>
       <PostHeader>
         <PostPicture
           onClick={() => navigate(`/profile/${props.post.owner.id}`)}
@@ -218,7 +218,7 @@ const Post: React.FC<Props> = props => {
           onClick={() => navigate(`/post/${props.post.id}`)}
         />
       </PostHeader>
-      <div style={{ position: 'relative' }}>
+      <div ref={postRef} style={{ position: 'relative' }}>
         {postType === 'image' ? (
           <PostContent
             src={
