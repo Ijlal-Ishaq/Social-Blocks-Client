@@ -19,6 +19,7 @@ import Ad from '../../components/Ad';
 import TopCreator from '../../components/TopCreators';
 import UpcomingFeatures from '../../components/UpcomingFeatures';
 import { SERVER_URL } from '../../utils/constants';
+import FloatingActionButton from '../../components/FloatingActionButton';
 
 const Body = styled('div')(({ theme }) => ({
   width: '100vw',
@@ -604,6 +605,8 @@ export default function LetterAvatars() {
         <UpcomingFeatures />
         {/* <Ad /> */}
       </SuggestionsDiv>
+      <FloatingActionButton />
+      
     </Body>
   );
 }

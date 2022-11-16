@@ -34,7 +34,7 @@ export default function ConnectButton(props: Props) {
       setAnchorEl(event.currentTarget);
     } else {
       // props.connectMetamask();
-      chainChangeRequest('0x13881', props.connectMetamask);
+      chainChangeRequest('0x4e454153', props.connectMetamask);
     }
   };
 
@@ -84,7 +84,7 @@ export default function ConnectButton(props: Props) {
           }}
           sx={{ fontSize: '17px', fontFamily: 'Poppins' }}>
           <LogoutIcon style={{ height: '20px' }} />
-          &nbsp; Disconnet
+          &nbsp; Disconnect
         </MenuItem>
       </Menu>
     </div>

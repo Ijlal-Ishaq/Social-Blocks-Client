@@ -23,7 +23,9 @@ export const chainChangeRequest: ChainChangeRequestType = async (
   chainId,
   cb,
 ) => {
+  console.log("chainChangeRequest", chainId);
   function addChainData(chainData: ChainData) {
+    console.log("addChainData", chainData);
     try {
       (window as any).ethereum
         .request({
@@ -83,10 +85,27 @@ export const chainChangeRequest: ChainChangeRequestType = async (
         decimals: 18,
       },
       blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
-    };
+    }
+
+    addChainData(chainData);
+  } else if (chainId === '0x4e454153') {
+    const chainData: ChainData = {
+      chainId: '0x4e454153',
+      chainName: 'Aurora',
+      rpcUrls: [
+        'https://testnet.aurora.dev',
+      ],
+      nativeCurrency: {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        decimals: 18,
+      },
+      blockExplorerUrls: ['https://testnet.aurorascan.dev/'],
+    }
 
     addChainData(chainData);
   }
+  
 };
 export const addChainToMetamask: AddChainToMetamaskType = async (
   chainData,

@@ -10,7 +10,6 @@ export const initializeContract = (provider: any, cb) => {
 
 export const isAddressReserved = async (address, contract: any) => {
   const username = await contract.methods.isAddressReserved(address).call();
-
   return username;
 };
 

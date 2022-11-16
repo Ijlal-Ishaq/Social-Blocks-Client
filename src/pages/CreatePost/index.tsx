@@ -264,6 +264,8 @@ const Index: FC = () => {
             setLoading(false);
           })
           .on('confirmation', function (confirmationNumber) {
+            setLoading(false);
+            navigate('/home');
             if (confirmationNumber === 0) {
               navigate('/home');
             }
@@ -389,7 +391,7 @@ const Index: FC = () => {
         </RadioGroup>
         {status === '0' && (
           <>
-            <Label>Price (Matic) :</Label>
+            <Label>Price (ETH) :</Label>
             <Input
               placeholder="Enter price."
               value={price}
@@ -401,7 +403,7 @@ const Index: FC = () => {
         )}
         {status === '1' && (
           <>
-            <Label>Base Price (Matic) :</Label>
+            <Label>Base Price (ETH) :</Label>
             <Input
               placeholder="Enter base price."
               value={price}

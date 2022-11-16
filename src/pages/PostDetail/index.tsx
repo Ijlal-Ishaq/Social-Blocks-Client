@@ -409,30 +409,34 @@ const PostDetail: FC = () => {
   };
 
   const getBiddingDetails = async () => {
-    const web3 = new Web3(
-      'https://polygon-mumbai.g.alchemy.com/v2/5MfjmScw7iPoX389ZCYuKOtgtsA1Eg4g',
-    );
-    const contract = new web3.eth.Contract(
-      contractAbi as any,
-      CONTRACT_ADDRESS,
-    );
-    const info = await contract.methods.getLastBidInfoById(postId).call();
-    let date = new Date(info[2] * 1000);
-    setBiddingDate(date);
-    if (info[1] == '0') {
-      setBiddingPrice(postDetails?.sellValue / 10 ** 18);
-    } else {
-      setBiddingPrice(info[1] / 10 ** 18);
-    }
+    try {
+      const web3 = new Web3(
+        'https://aurora-testnet.infura.io/v3/7f6f5921404842ba992a4d334431c6f7',
+      );
+      const contract = new web3.eth.Contract(
+        contractAbi as any,
+        CONTRACT_ADDRESS,
+      );
+      const info = await contract.methods.getLastBidInfoById(postId).call();
+      let date = new Date(info[2] * 1000);
+      setBiddingDate(date);
+      if (info[1] == '0') {
+        setBiddingPrice(postDetails?.sellValue / 10 ** 18);
+      } else {
+        setBiddingPrice(info[1] / 10 ** 18);
+      }
 
-    if (parseInt(info[0]) > postDetails.sellValue) {
-      setPostDetails(state => ({
-        ...state,
-        sellValue: info[0],
-      }));
+      if (parseInt(info[0]) > postDetails.sellValue) {
+        setPostDetails(state => ({
+          ...state,
+          sellValue: info[0],
+        }));
+      }
+      setBiddingAddress(info[0]);
+      setBiddingTimestamp(info[2]);
+    } catch (error) {
+      console.log(error)
     }
-    setBiddingAddress(info[0]);
-    setBiddingTimestamp(info[2]);
   };
 
   const reloadData = async () => {
@@ -563,7 +567,7 @@ const PostDetail: FC = () => {
 
   const getClaimableAmount = async () => {
     const web3 = new Web3(
-      'https://polygon-mumbai.g.alchemy.com/v2/5MfjmScw7iPoX389ZCYuKOtgtsA1Eg4g',
+      'https://aurora-testnet.infura.io/v3/7f6f5921404842ba992a4d334431c6f7',
     );
     const contract = new web3.eth.Contract(
       contractAbi as any,
@@ -724,7 +728,7 @@ const PostDetail: FC = () => {
                   )}
                 </div>
                 <div style={{ fontSize: '15px', fontWeight: '500' }}>
-                  Value<span style={{ fontSize: '10px' }}>(Matic)</span>
+                  Value<span style={{ fontSize: '10px' }}>(ETH)</span>
                 </div>
               </InfoTab>
             </InfoContainer>
@@ -746,7 +750,7 @@ const PostDetail: FC = () => {
                     justifyContent: 'center',
                   }}>
                   <a
-                    href="https://mumbai.polygonscan.com/address/0x076c5102C870AA5Ac9d1336947dFbD5d9Fbb6991"
+                    href="https://testnet.aurorascan.dev/address/0xa030a24efb9348632dd17ea11294805bed482d6c"
                     target={'_blank'}
                     style={{
                       fontWeight: '700',
@@ -762,7 +766,7 @@ const PostDetail: FC = () => {
                     style={{ transform: 'rotate(90deg)' }}
                     onClick={() => {
                       window.open(
-                        'https://mumbai.polygonscan.com/address/0x076c5102C870AA5Ac9d1336947dFbD5d9Fbb6991',
+                        'https://testnet.aurorascan.dev/address/0xa030a24efb9348632dd17ea11294805bed482d6c',
                         '_blank',
                       );
                     }}
@@ -828,9 +832,9 @@ const PostDetail: FC = () => {
                       fontWeight: '700',
                     }}>
                     {postDetails.buyStatus == 0 ? (
-                      <>&#8226; {postDetails?.sellValue / 10 ** 18} Matic</>
+                      <>&#8226; {postDetails?.sellValue / 10 ** 18} ETH</>
                     ) : postDetails.buyStatus == 1 ? (
-                      <>&#8226; {postDetails?.sellValue / 10 ** 18} Matic</>
+                      <>&#8226; {postDetails?.sellValue / 10 ** 18} ETH</>
                     ) : (
                       <>&#8226; Not For Sale.</>
                     )}
@@ -872,13 +876,14 @@ const PostDetail: FC = () => {
                       marginTop: '0px',
                       fontWeight: '700',
                     }}>
-                    &#8226; {biddingDate?.toDateString()}
+                      {/* {console.log("biddingDate",biddingDate)} */}
+                    &#8226; {biddingDate && biddingDate.toDateString()}
                     &nbsp; <br />
                     &nbsp; &nbsp;
                     <span style={{ fontSize: '25px', lineHeight: '10px' }}>
-                      @&nbsp;{biddingDate?.getHours() + 'h : '}
-                      {biddingDate?.getHours() + 'm : '}
-                      {biddingDate?.getSeconds() + 's'}&nbsp;
+                      @&nbsp;{biddingDate && biddingDate.getHours() + 'h : '}
+                      {biddingDate && biddingDate.getHours() + 'm : '}
+                      {biddingDate && biddingDate.getSeconds() + 's'}&nbsp;
                     </span>
                   </Heading>
                   <Heading
@@ -896,7 +901,7 @@ const PostDetail: FC = () => {
                       marginTop: '0px',
                       fontWeight: '700',
                     }}>
-                    &#8226; {biddingPrice} Matic
+                    &#8226; {biddingPrice} ETH
                   </Heading>
                   <Heading
                     style={{
@@ -943,7 +948,7 @@ const PostDetail: FC = () => {
                           textAlign: 'left',
                           marginBottom: '0px',
                         }}>
-                        Your Bid (Matic) :
+                        Your Bid (ETH) :
                       </Heading>
                       <Input
                         placeholder="Enter amount"
