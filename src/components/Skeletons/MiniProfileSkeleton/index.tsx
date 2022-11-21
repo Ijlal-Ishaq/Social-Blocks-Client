@@ -41,7 +41,7 @@ const Index: React.FC<Props> = () => {
             border: "solid 2px " + alpha(theme.palette.text.primary, 0.5),
           }}
         />
-        &nbsp;&nbsp;
+        &nbsp;&nbsp; 
         <div style={{ flex: 1 }}>
           <Skeleton
             variant="rectangular"

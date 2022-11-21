@@ -23,7 +23,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Ad from '../../components/Ad';
 import TopCreator from '../../components/TopCreators';
 import UpcomingFeatures from '../../components/UpcomingFeatures';
-import { SERVER_URL } from '../../utils/constants';
+import { SERVER_URL, SUBGRAPH_URL } from '../../utils/constants';
 import ReactPlayer from 'react-player';
 
 const Body = styled('div')(({ theme }) => ({
@@ -311,7 +311,7 @@ const PostDetail: FC = () => {
   const getPostDetails = async () => {
     if (postId !== '') {
       const result = await axios.post(
-        'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+        SUBGRAPH_URL,
         {
           query: `
           {

@@ -6,7 +6,7 @@ import { alpha, styled } from '@mui/material';
 import Header from '../../components/Header/index';
 import ProfileSkeleton from '../../components/Skeletons/ProfileSkeleton';
 import Profile from '../../components/Profile';
-import { SERVER_URL } from '../../utils/constants';
+import { SERVER_URL, SUBGRAPH_URL } from '../../utils/constants';
 
 const Body = styled('div')(({ theme }) => ({
   width: '100vw',
@@ -88,7 +88,7 @@ export default function Home() {
       });
 
       const result = await axios.post(
-        'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+        SUBGRAPH_URL,
         {
           query: `
           {
@@ -115,7 +115,7 @@ export default function Home() {
 
   const getUserDetails = async () => {
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
       {

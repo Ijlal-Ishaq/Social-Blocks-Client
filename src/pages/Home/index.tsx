@@ -16,7 +16,9 @@ import PostSkeleton from '../../components/Skeletons/PostSkeleton';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { SERVER_URL } from '../../utils/constants';
+import { SERVER_URL, SUBGRAPH_URL } from '../../utils/constants';
+
+
 
 const Body = styled('div')(({ theme }) => ({
   width: '100vw',
@@ -149,7 +151,7 @@ export default function Home() {
     addressesString += '"' + account?.toLowerCase() + '",';
 
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
         {
@@ -197,7 +199,7 @@ export default function Home() {
   const getAllPosts = async () => {
     setLoading(true);
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
         {

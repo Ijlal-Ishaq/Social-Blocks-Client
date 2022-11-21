@@ -18,7 +18,7 @@ import Loader from '../../components/Loader';
 import Ad from '../../components/Ad';
 import TopCreator from '../../components/TopCreators';
 import UpcomingFeatures from '../../components/UpcomingFeatures';
-import { SERVER_URL } from '../../utils/constants';
+import { SERVER_URL, SUBGRAPH_URL } from '../../utils/constants';
 import FloatingActionButton from '../../components/FloatingActionButton';
 
 const Body = styled('div')(({ theme }) => ({
@@ -248,7 +248,7 @@ export default function LetterAvatars() {
 
   const getCreatedPosts = async () => {
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
       {
@@ -292,7 +292,7 @@ export default function LetterAvatars() {
 
   const getOwnedPosts = async () => {
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
       {
@@ -336,7 +336,7 @@ export default function LetterAvatars() {
 
   const getUserDetails = async () => {
     const result = await axios.post(
-      'https://api.thegraph.com/subgraphs/name/ijlal-ishaq/socialblocksgraphone',
+      SUBGRAPH_URL,
       {
         query: `
       {
